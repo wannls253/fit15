@@ -24,48 +24,49 @@
 .chart{height:150px;display:flex;align-items:flex-end;gap:8px;padding:12px 0 0}.barcol{flex:1;text-align:center;font-size:9px;color:#888}.barfill{width:100%;max-width:34px;margin:auto;background:#111;border-radius:7px 7px 2px 2px;min-height:4px}.barcol span{display:block;margin-top:5px}
 .note{font-size:11px;color:#888;line-height:1.5}
 @media(max-width:500px){.hero h1{font-size:28px}.fields{margin-left:0}.donebox{margin-left:0}}
-</style>
+.auth{position:fixed;inset:0;background:#f3f4f6;display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}.authbox{width:100%;max-width:390px;background:#fff;border-radius:22px;padding:24px;box-shadow:0 8px 30px #0001}.authbox h2{margin:0 0 6px;font-size:25px}.authbox p{margin:0 0 18px;color:#777;font-size:13px}.authbox input{width:100%;padding:12px;border:1px solid #ddd;border-radius:11px;margin:6px 0;font-size:14px}.authmsg{font-size:12px;color:#777;margin:10px 0;min-height:18px}.authlinks{display:flex;gap:8px;margin-top:8px}.authlinks button{flex:1}.account{font-size:11px;color:#aaa;display:flex;align-items:center;gap:8px}.account button{border:0;background:#292929;color:#fff;border-radius:9px;padding:6px 9px;font-size:11px}.hidden{display:none!important}</style>
 </head>
 <body><div class="app">
-<header class="hero"><div class="top"><div class="brand">FIT15</div><div class="badge">15 MIN / SESSION</div></div>
+<header class="hero"><div class="top"><div class="brand">FIT15</div><div class="account"><span id="userEmail"></span><button onclick="signOut()">Sign out</button></div></div>
 <h1>Train. Track.<br>Improve.</h1><p>Your simple Monday / Wednesday / Friday strength routine.</p>
 <div class="stats"><div class="stat"><b id="total">0</b><span>WORKOUTS</span></div><div class="stat"><b id="streak">0</b><span>WEEKS LOGGED</span></div><div class="stat"><b id="mins">0</b><span>MINUTES</span></div></div></header>
 <main class="content">
 <div class="section-title">THIS WEEK</div><div class="days" id="days"></div>
 <div id="workout"></div>
 <div class="card"><div class="workhead"><div><h2>Progress</h2><p>Sessions completed over your latest weeks</p></div></div><div class="chart" id="chart"></div></div>
-<div class="card"><div class="workhead"><div><h2>Workout History</h2><p>Saved on this device</p></div></div><div id="history"></div>
+<div class="card"><div class="workhead"><div><h2>Workout History</h2><p>Saved to your FIT15 cloud account</p></div></div><div id="history"></div>
 <div class="actions"><button class="secondary" onclick="exportData()">Export backup</button><button class="secondary" onclick="importData()">Import backup</button></div></div>
-<div class="note">Tip: export a backup occasionally if you want to move your tracker to another browser or computer.</div>
+<div class="note">Your workouts are synced to your FIT15 account, so you can use FIT15 on your phone, tablet, or computer.</div>
 </main></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL="https://ssvwlfmdwjoovgeasacs.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_Yv3Pa--xxteYs8-o7iRznw_vc2S68CI";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const plans={
 MON:{name:"Cindy",desc:"5 rounds • bodyweight",ex:[["Ledge Pull-up","3 reps","reps"],["Push-up","10 reps","reps"],["Squat","15 reps","reps"]]},
 WED:{name:"Shoulders + Core",desc:"4 sets • controlled reps",ex:[["DB Overhead Press","10 / side • 9.5 kg","reps"],["DB Lateral Raise","10 / side • 4 kg","reps"],["Plank","1:00 • 2 sets","time"],["Superman","10 reps • 2 sets","reps"]]},
 FRI:{name:"Back + Legs",desc:"4 sets • strength focus",ex:[["One-arm DB Row","10 / side • 9.5 kg","reps"],["Hip Huggers","9.5 kg • 4 sets","reps"],["DB Romanian Deadlift","10 reps • 4 kg • 4 sets","reps"],["Goblet Squat","10 reps • 9.5 kg • 3 sets","reps"]]}
 };
-let data=JSON.parse(localStorage.getItem("fit15v2")||"[]");
-let dow=new Date().getDay(),active=dow===1?"MON":dow===3?"WED":dow===5?"FRI":"MON";
+let data=[];let dow=new Date().getDay(),active=dow===1?"MON":dow===3?"WED":dow===5?"FRI":"MON";let currentUser=null;
 function weekKey(d){let x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x.toISOString().slice(0,10)}
 function isDone(k){return data.some(x=>x.day===k&&weekKey(x.date)===weekKey(new Date()))}
 function renderDays(){document.getElementById("days").innerHTML=Object.keys(plans).map(k=>`<button class="day ${k===active?'active ':''}${isDone(k)?'done':''}" onclick="active='${k}';render()"><strong>${k}</strong><span>${plans[k].name}</span></button>`).join("")}
-function render(){
-renderDays();let p=plans[active];
-document.getElementById("workout").innerHTML=`<div class="card"><div class="workhead"><div><h2>${p.name}</h2><p>${p.desc}</p></div><div class="round">15 min</div></div>
-<div class="progresslabel"><span>Session progress</span><span id="pct">0%</span></div><div class="progress"><div class="bar" id="bar"></div></div>
-${p.ex.map((e,i)=>`<div class="exercise"><div class="exrow"><div class="num">${i+1}</div><div><div class="exname">${e[0]}</div><div class="target">${e[1]}</div></div></div>
-<div class="fields">${e[2]==='time'?`<input id="v${i}" placeholder="1:00">`:`<input id="v${i}" type="number" min="0" placeholder="reps">`}<input id="s${i}" type="number" min="0" placeholder="sets"></div>
-<label class="donebox"><input id="d${i}" type="checkbox" onchange="updateProgress()"> Exercise completed</label></div>`).join("")}
-<button class="primary" onclick="save()">SAVE WORKOUT ✓</button></div>`;
-updateProgress();renderHistory();renderStats();renderChart();
-}
+function render(){renderDays();let p=plans[active];document.getElementById("workout").innerHTML=`<div class="card"><div class="workhead"><div><h2>${p.name}</h2><p>${p.desc}</p></div><div class="round">15 min</div></div><div class="progresslabel"><span>Session progress</span><span id="pct">0%</span></div><div class="progress"><div class="bar" id="bar"></div></div>${p.ex.map((e,i)=>`<div class="exercise"><div class="exrow"><div class="num">${i+1}</div><div><div class="exname">${e[0]}</div><div class="target">${e[1]}</div></div></div><div class="fields">${e[2]==='time'?`<input id="v${i}" placeholder="1:00">`:`<input id="v${i}" type="number" min="0" placeholder="reps">`}<input id="s${i}" type="number" min="0" placeholder="sets"></div><label class="donebox"><input id="d${i}" type="checkbox" onchange="updateProgress()"> Exercise completed</label></div>`).join("")}<button class="primary" onclick="save()">SAVE WORKOUT ✓</button></div>`;updateProgress();renderHistory();renderStats();renderChart()}
 function updateProgress(){let n=plans[active].ex.length,c=0;for(let i=0;i<n;i++)if(document.getElementById("d"+i)?.checked)c++;let pct=Math.round(c/n*100);document.getElementById("bar").style.width=pct+"%";document.getElementById("pct").textContent=pct+"%"}
-function save(){let ex=plans[active].ex.map((e,i)=>({name:e[0],value:document.getElementById("v"+i).value,sets:document.getElementById("s"+i).value,done:document.getElementById("d"+i).checked}));if(!ex.some(x=>x.done)){alert("Complete at least one exercise first.");return}data.unshift({date:new Date().toISOString(),day:active,name:plans[active].name,ex});localStorage.setItem("fit15v2",JSON.stringify(data));render();alert("Workout saved ✓")}
+async function save(){let ex=plans[active].ex.map((e,i)=>({name:e[0],value:document.getElementById("v"+i).value,sets:document.getElementById("s"+i).value,done:document.getElementById("d"+i).checked}));if(!ex.some(x=>x.done)){alert("Complete at least one exercise first.");return}let rows=ex.filter(x=>x.done).map(x=>({userid:currentUser.id,workout_date:new Date().toISOString().slice(0,10),workout_day:active,workout_name:plans[active].name,exercise:x.name,weight:parseWeight(x.value,x.name),reps:parseReps(x.value,x.name),sets:x.sets?Number(x.sets):null,duration:x.name==="Plank"?x.value:null,completed:true,notes:null}));let {error}=await sb.from("workouts").insert(rows);if(error){alert("Could not save: "+error.message);return}await loadData();render();alert("Workout saved to cloud ✓")}
+function parseWeight(v,n){let m=plans[active].ex.find(e=>e[0]===n)?.[1]?.match(/([0-9.]+)\s*kg/i);return m?Number(m[1]):null}
+function parseReps(v,n){if(n==="Plank")return null;let x=Number(v);return Number.isFinite(x)&&x>0?x:null}
+async function loadData(){let {data:rows,error}=await sb.from("workouts").select("id,workout_date,workout_day,workout_name,exercise,weight,reps,sets,duration,completed,notes,created_at").order("created_at",{ascending:false});if(error){console.error(error);alert("Could not load cloud workouts: "+error.message);return}let grouped={};for(const r of rows){let key=r.created_at.slice(0,19);if(!grouped[key])grouped[key]={date:r.created_at,day:r.workout_day,name:r.workout_name,ex:[]};grouped[key].ex.push({id:r.id,name:r.exercise,value:r.duration||r.reps||"",sets:r.sets||"",done:r.completed})}data=Object.values(grouped)}
 function renderStats(){document.getElementById("total").textContent=data.length;document.getElementById("mins").textContent=data.length*15;document.getElementById("streak").textContent=new Set(data.map(x=>weekKey(x.date))).size}
-function renderHistory(){let h=document.getElementById("history");if(!data.length){h.innerHTML='<div class="empty">No sessions yet — your first one is waiting.</div>';return}h.innerHTML=data.slice(0,8).map((w,i)=>`<div class="history-item"><button onclick="del(${i})">×</button><b>${new Date(w.date).toLocaleDateString()}</b> · ${w.day}<br><span class="muted">${w.ex.filter(x=>x.done).map(x=>x.name+(x.value?": "+x.value:"")).join(" · ")}</span></div>`).join("")}
+function renderHistory(){let h=document.getElementById("history");if(!data.length){h.innerHTML='<div class="empty">No sessions yet — your first one is waiting.</div>';return}h.innerHTML=data.slice(0,8).map((w,i)=>`<div class="history-item"><button onclick="del(${i})">×</button><b>${new Date(w.date).toLocaleDateString()}</b> · ${w.day}<br><span class="muted">${w.ex.filter(x=>x.done).map(x=>x.name+(x.value?": "+x.value:"" )).join(" · ")}</span></div>`).join("")}
 function renderChart(){let keys=[];let now=new Date();for(let i=5;i>=0;i--){let d=new Date(now);d.setDate(now.getDate()-i*7);keys.push(weekKey(d))}let counts=keys.map(k=>data.filter(x=>weekKey(x.date)===k).length),max=Math.max(1,...counts);document.getElementById("chart").innerHTML=counts.map((n,i)=>`<div class="barcol"><div class="barfill" style="height:${Math.max(4,n/max*105)}px"></div><span>${i===5?'Now':i===4?'1w':i===3?'2w':i===2?'3w':i===1?'4w':'5w'}</span></div>`).join("")}
-function del(i){if(confirm("Delete this workout?")){data.splice(i,1);localStorage.setItem("fit15v2",JSON.stringify(data));render()}}
-function exportData(){let b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="fit15-backup.json";a.click()}
-function importData(){let x=document.createElement("input");x.type="file";x.accept=".json";x.onchange=e=>{let r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);localStorage.setItem("fit15v2",JSON.stringify(data));render()}catch{alert("Invalid backup file.")}};r.readAsText(e.target.files[0])};x.click()}
-render();
+async function del(i){let w=data[i];if(!confirm("Delete this workout?"))return;let ids=w.ex.map(x=>x.id).filter(Boolean);if(ids.length){let {error}=await sb.from("workouts").delete().in("id",ids);if(error){alert("Could not delete: "+error.message);return}}await loadData();render()}
+function exportData(){let b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="fit15-cloud-backup.json";a.click()}
+function importData(){alert("Cloud import is not enabled yet. Your current workouts are already stored in Supabase.")}
+async function signOut(){await sb.auth.signOut();location.reload()}
+function showAuth(msg=""){document.body.insertAdjacentHTML("afterbegin",`<div class="auth" id="auth"><div class="authbox"><h2>FIT15</h2><p>Sign in to sync your workouts across devices.</p><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><div class="authmsg" id="authmsg">${msg}</div><button class="primary" onclick="signIn()">SIGN IN</button><div class="authlinks"><button class="secondary" onclick="signUp()">Create account</button></div></div></div>`)}
+async function signIn(){let email=document.getElementById("email").value.trim(),password=document.getElementById("password").value,msg=document.getElementById("authmsg");if(!email||!password){msg.textContent="Enter your email and password.";return}msg.textContent="Signing in…";let {error}=await sb.auth.signInWithPassword({email,password});if(error){msg.textContent=error.message;return}location.reload()}
+async function signUp(){let email=document.getElementById("email").value.trim(),password=document.getElementById("password").value,msg=document.getElementById("authmsg");if(!email||!password){msg.textContent="Enter your email and password.";return}if(password.length<6){msg.textContent="Password must be at least 6 characters.";return}msg.textContent="Creating account…";let {data:res,error}=await sb.auth.signUp({email,password});if(error){msg.textContent=error.message;return}msg.textContent=res.session?"Account created. Loading…":"Account created. Check your email to verify, then sign in."}
+(async()=>{let {data:{session}}=await sb.auth.getSession();if(!session){showAuth();return}currentUser=session.user;document.getElementById("userEmail").textContent=currentUser.email||"Account";await loadData();render()})();
 </script></body></html>
