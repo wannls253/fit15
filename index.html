@@ -1169,6 +1169,615 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   }
 }
 </style>
+
+<style id="fit15-peak-ui">
+/* ============================================================
+   FIT15 PEAK UI — WORLD-CLASS / HIGH-ENERGY VISUAL LAYER
+   Design direction:
+   elite performance lab × Japanese fight-tech × luxury hardware
+   ============================================================ */
+
+:root{
+  --peak-bg:#030405;
+  --peak-panel:rgba(13,15,18,.78);
+  --peak-panel-2:rgba(19,22,26,.64);
+  --peak-line:rgba(255,255,255,.105);
+  --peak-line-hot:rgba(255,255,255,.22);
+  --peak-text:#f5f7f8;
+  --peak-muted:#8e969f;
+  --peak-dim:#565e67;
+  --peak-hot:#f4f5f6;
+  --peak-hot-soft:rgba(255,255,255,.07);
+  --peak-shadow:0 28px 80px rgba(0,0,0,.55);
+  --peak-radius:20px;
+}
+
+/* ---------- Global atmosphere ---------- */
+html,body{
+  background:
+    radial-gradient(900px 500px at 50% -10%,rgba(255,255,255,.075),transparent 62%),
+    radial-gradient(700px 500px at 100% 40%,rgba(255,255,255,.025),transparent 70%),
+    #030405 !important;
+  color:var(--peak-text);
+}
+
+body{
+  min-height:100vh;
+  letter-spacing:.005em;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:linear-gradient(to bottom,black,transparent 90%);
+  opacity:.42;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:radial-gradient(circle at center,transparent 42%,rgba(0,0,0,.48) 100%);
+}
+
+/* ---------- Premium scrollbar ---------- */
+*{
+  scrollbar-width:thin;
+  scrollbar-color:#4b5158 transparent;
+}
+*::-webkit-scrollbar{width:7px;height:7px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{
+  background:linear-gradient(#555d66,#292e34);
+  border-radius:99px;
+  border:2px solid transparent;
+  background-clip:padding-box;
+}
+
+/* ---------- App shell ---------- */
+#app{
+  position:relative;
+  isolation:isolate;
+}
+
+.container,
+.wrap,
+.shell,
+main{
+  position:relative;
+}
+
+.card,
+.panel,
+.section,
+.stat,
+.history-card,
+.matrix,
+.chart-wrap,
+.workout-card{
+  border:1px solid var(--peak-line) !important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012) 38%,rgba(0,0,0,.12)),
+    var(--peak-panel) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.045) inset,
+    0 -1px 0 rgba(0,0,0,.35) inset,
+    var(--peak-shadow);
+  backdrop-filter:blur(22px) saturate(120%);
+  -webkit-backdrop-filter:blur(22px) saturate(120%);
+}
+
+/* ---------- Typography hierarchy ---------- */
+h1,h2,h3,h4,
+.logo,
+.brand,
+.title,
+.hero-title{
+  color:#fff !important;
+  text-shadow:0 0 30px rgba(255,255,255,.075);
+}
+
+h1,h2{
+  letter-spacing:-.035em;
+}
+
+h3,h4{
+  letter-spacing:-.02em;
+}
+
+/* ---------- Header / navigation ---------- */
+header,
+.topbar,
+.navbar{
+  background:rgba(3,4,5,.74) !important;
+  border-bottom:1px solid rgba(255,255,255,.085) !important;
+  backdrop-filter:blur(24px) saturate(150%);
+  -webkit-backdrop-filter:blur(24px) saturate(150%);
+  box-shadow:0 12px 45px rgba(0,0,0,.22);
+}
+
+.logo,
+.brand{
+  position:relative;
+  font-weight:950 !important;
+  letter-spacing:-.06em !important;
+}
+
+.logo::after,
+.brand::after{
+  content:"";
+  display:inline-block;
+  width:5px;
+  height:5px;
+  margin-left:7px;
+  margin-bottom:3px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 14px rgba(255,255,255,.8);
+}
+
+/* ---------- Hero ---------- */
+.hero,
+.hero-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:28px !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+  background:
+    radial-gradient(circle at 80% 18%,rgba(255,255,255,.10),transparent 22%),
+    radial-gradient(circle at 10% 100%,rgba(255,255,255,.045),transparent 28%),
+    linear-gradient(135deg,#111419 0%,#080a0d 48%,#040506 100%) !important;
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.62),
+    0 1px 0 rgba(255,255,255,.09) inset;
+}
+
+.hero::before,
+.hero-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(110deg,transparent 0 55%,rgba(255,255,255,.035) 55.2%,transparent 55.5%),
+    repeating-linear-gradient(135deg,transparent 0 9px,rgba(255,255,255,.012) 10px,transparent 11px);
+  opacity:.7;
+}
+
+.hero::after,
+.hero-card::after{
+  content:"";
+  position:absolute;
+  width:320px;
+  height:320px;
+  right:-160px;
+  top:-180px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:50%;
+  box-shadow:
+    0 0 0 32px rgba(255,255,255,.018),
+    0 0 0 64px rgba(255,255,255,.012);
+  pointer-events:none;
+}
+
+.hero-title{
+  font-size:clamp(2.5rem,7vw,6.5rem) !important;
+  line-height:.88 !important;
+  font-weight:1000 !important;
+  letter-spacing:-.075em !important;
+}
+
+/* ---------- Buttons: tactile premium hardware ---------- */
+button,
+.btn,
+.button{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.13) !important;
+  border-radius:12px !important;
+  transition:
+    transform .18s cubic-bezier(.2,.8,.2,1),
+    border-color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease,
+    filter .18s ease !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.07) inset,
+    0 7px 22px rgba(0,0,0,.22);
+}
+
+button:hover,
+.btn:hover,
+.button:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.28) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.11) inset,
+    0 14px 34px rgba(0,0,0,.38);
+  filter:brightness(1.08);
+}
+
+button:active,
+.btn:active,
+.button:active{
+  transform:translateY(0) scale(.985);
+  box-shadow:0 3px 12px rgba(0,0,0,.35);
+}
+
+button:focus-visible,
+.btn:focus-visible,
+.button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible{
+  outline:2px solid rgba(255,255,255,.85) !important;
+  outline-offset:3px;
+}
+
+.primary,
+.primary-btn,
+button[type="submit"],
+#save{
+  background:
+    linear-gradient(135deg,#fff 0%,#dfe3e6 45%,#aeb5bc 100%) !important;
+  color:#050608 !important;
+  border-color:#fff !important;
+  font-weight:900 !important;
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 12px 35px rgba(255,255,255,.09),
+    0 10px 25px rgba(0,0,0,.35);
+}
+
+.primary:hover,
+.primary-btn:hover,
+button[type="submit"]:hover,
+#save:hover{
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 0 32px rgba(255,255,255,.13),
+    0 18px 45px rgba(0,0,0,.45);
+}
+
+/* ---------- Inputs ---------- */
+input,
+select,
+textarea{
+  background:rgba(0,0,0,.32) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  color:#fff !important;
+  border-radius:11px !important;
+  box-shadow:0 1px 0 rgba(255,255,255,.035) inset;
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+
+input:hover,
+select:hover,
+textarea:hover{
+  border-color:rgba(255,255,255,.18) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  background:rgba(255,255,255,.035) !important;
+  border-color:rgba(255,255,255,.36) !important;
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.045),
+    0 0 28px rgba(255,255,255,.035);
+}
+
+/* ---------- Stats / metrics ---------- */
+.stat,
+.metric,
+.kpi{
+  position:relative;
+  overflow:hidden;
+  border-radius:17px !important;
+}
+
+.stat::before,
+.metric::before,
+.kpi::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:42%;
+  height:1px;
+  background:linear-gradient(90deg,#fff,transparent);
+  opacity:.7;
+}
+
+.stat strong,
+.metric strong,
+.kpi strong{
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.055em;
+}
+
+/* ---------- Workout cards ---------- */
+.workout-card,
+.exercise,
+.exercise-card{
+  position:relative;
+  border-radius:18px !important;
+  transition:
+    transform .2s cubic-bezier(.2,.8,.2,1),
+    border-color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+.workout-card:hover,
+.exercise:hover,
+.exercise-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(255,255,255,.19) !important;
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.35),
+    0 1px 0 rgba(255,255,255,.06) inset;
+}
+
+.workout-card::after,
+.exercise::after,
+.exercise-card::after{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.025),transparent 35%);
+}
+
+/* ---------- Completed state ---------- */
+.done,
+.completed,
+.exercise.done,
+.exercise-card.done{
+  border-color:rgba(255,255,255,.32) !important;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),
+    rgba(10,12,14,.8) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.025) inset,
+    0 12px 42px rgba(0,0,0,.3);
+}
+
+/* ---------- Checkboxes ---------- */
+input[type="checkbox"]{
+  accent-color:#fff;
+  width:19px;
+  height:19px;
+  cursor:pointer;
+}
+
+/* ---------- Tabs ---------- */
+.chart-tab,
+.tab{
+  color:#777f88 !important;
+  border-color:transparent !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+.chart-tab:hover,
+.tab:hover{
+  color:#fff !important;
+  background:rgba(255,255,255,.045) !important;
+  transform:none !important;
+}
+
+.chart-tab.active,
+.tab.active{
+  color:#fff !important;
+  background:rgba(255,255,255,.08) !important;
+  border-color:rgba(255,255,255,.13) !important;
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset !important;
+}
+
+/* ---------- 12-week matrix ---------- */
+.matrix{
+  overflow:hidden;
+  border-radius:22px !important;
+}
+
+.matrix td,
+.matrix th{
+  border-color:rgba(255,255,255,.055) !important;
+}
+
+.matrix td{
+  transition:transform .16s ease,filter .16s ease;
+}
+
+.matrix td:hover{
+  transform:scale(1.06);
+  filter:brightness(1.25);
+  z-index:2;
+}
+
+.matrix .cold,
+.matrix .ember,
+.matrix .burning,
+.matrix .blazing,
+.matrix .heaven{
+  box-shadow:0 0 14px rgba(255,255,255,.025);
+}
+
+/* ---------- History ---------- */
+.history-card,
+.history-item{
+  border-radius:15px !important;
+  border-color:rgba(255,255,255,.08) !important;
+  background:rgba(255,255,255,.025) !important;
+}
+
+.history-card:hover,
+.history-item:hover{
+  background:rgba(255,255,255,.045) !important;
+}
+
+/* ---------- Toast / feedback ---------- */
+.toast{
+  border:1px solid rgba(255,255,255,.17) !important;
+  background:rgba(10,11,13,.9) !important;
+  backdrop-filter:blur(18px);
+  box-shadow:
+    0 15px 55px rgba(0,0,0,.55),
+    0 1px 0 rgba(255,255,255,.08) inset;
+  border-radius:13px !important;
+}
+
+/* ---------- Auth screen ---------- */
+.auth{
+  background:
+    radial-gradient(circle at 50% 42%,rgba(255,255,255,.075),transparent 20%),
+    radial-gradient(circle at 50% 100%,rgba(255,255,255,.025),transparent 42%),
+    #020304 !important;
+}
+
+.authbox{
+  border-color:rgba(255,255,255,.14) !important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.008)),
+    rgba(6,8,10,.84) !important;
+  box-shadow:
+    0 45px 120px rgba(0,0,0,.72),
+    0 1px 0 rgba(255,255,255,.08) inset,
+    0 0 80px rgba(255,255,255,.025);
+  backdrop-filter:blur(30px) saturate(135%);
+}
+
+.auth-mark{
+  font-weight:1000 !important;
+  letter-spacing:-.07em !important;
+}
+
+.auth-meter-track{
+  background:rgba(255,255,255,.07) !important;
+  border-color:rgba(255,255,255,.08) !important;
+}
+
+.auth-meter-fill{
+  background:linear-gradient(90deg,#737a81,#fff) !important;
+  box-shadow:0 0 24px rgba(255,255,255,.2);
+}
+
+/* ---------- Micro-grid labels / technical accents ---------- */
+.label,
+.eyebrow,
+.kicker,
+.overline{
+  text-transform:uppercase;
+  letter-spacing:.16em !important;
+  font-weight:800 !important;
+}
+
+.eyebrow::before,
+.kicker::before,
+.overline::before{
+  content:"";
+  display:inline-block;
+  width:18px;
+  height:1px;
+  margin:0 8px 4px 0;
+  background:#fff;
+  opacity:.7;
+}
+
+/* ---------- Link behavior ---------- */
+a{
+  color:#d8dde1;
+  text-decoration-color:rgba(255,255,255,.22);
+  text-underline-offset:4px;
+  transition:color .15s ease,text-decoration-color .15s ease;
+}
+
+a:hover{
+  color:#fff;
+  text-decoration-color:rgba(255,255,255,.65);
+}
+
+/* ---------- Mobile: aggressive clarity, not clutter ---------- */
+@media(max-width:700px){
+  body{
+    background:
+      radial-gradient(500px 300px at 50% -5%,rgba(255,255,255,.06),transparent 65%),
+      #030405 !important;
+  }
+
+  body::before{
+    background-size:42px 42px;
+    opacity:.25;
+  }
+
+  .hero,
+  .hero-card{
+    border-radius:22px !important;
+  }
+
+  .hero-title{
+    font-size:clamp(2.45rem,14vw,4.5rem) !important;
+  }
+
+  .card,
+  .panel,
+  .section{
+    box-shadow:
+      0 18px 50px rgba(0,0,0,.42),
+      0 1px 0 rgba(255,255,255,.045) inset;
+  }
+
+  button,
+  .btn,
+  .button{
+    min-height:44px;
+  }
+}
+
+/* ---------- Motion polish ---------- */
+@media(prefers-reduced-motion:no-preference){
+  .hero,
+  .hero-card{
+    animation:peakEntrance .7s cubic-bezier(.2,.8,.2,1) both;
+  }
+
+  @keyframes peakEntrance{
+    from{opacity:0;transform:translateY(10px) scale(.992)}
+    to{opacity:1;transform:none}
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* ---------- Selection ---------- */
+::selection{
+  background:#fff;
+  color:#050608;
+}
+</style>
+
 </head>
 <body>
 <noscript>
