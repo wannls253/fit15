@@ -109,7 +109,7 @@ body::after{
   content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse 100% 70% at 50% 42%,transparent 40%,rgba(0,0,0,.6) 100%);
 }
-button:focus-visible,input:focus-visible,.day:focus-visible{
+button:focus-visible,input:focus-visible,.day:focus-visible,.cell:focus-visible{
   outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px;
 }
 .app{max-width:1240px;margin:auto;padding:14px 22px 100px;position:relative;z-index:3}
@@ -878,39 +878,42 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 .chartbox{height:320px;position:relative}
 
 /* ============================================================
-   12-WEEK MATRIX — BATTLE EDITION
+   12-WEEK MATRIX — COMPACT BATTLE EDITION
    ============================================================ */
-.matrix-wrap{position:relative;margin-top:6px}
+.matrix-wrap{
+  position:relative;
+  margin:18px auto 0;
+  max-width:680px;
+}
 .matrix{
-  display:grid;grid-template-columns:repeat(12,1fr);gap:8px;margin-top:26px;
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:6px;
 }
 .cell{
   position:relative;
-  aspect-ratio:1;border-radius:6px;
+  aspect-ratio:1;border-radius:5px;
   background:linear-gradient(160deg,#0e0e16,#07070c);
   border:1px solid rgba(255,255,255,.06);
   transition:transform .22s cubic-bezier(.2,.9,.3,1.35),box-shadow .25s ease,border-color .25s ease;
-  cursor:crosshair;
+  cursor:pointer;
   display:grid;place-items:center;
   overflow:hidden;
   isolation:isolate;
-  max-width:64px;
-  margin:0 auto;
   width:100%;
 }
-/* inner rim highlight */
 .cell::before{
   content:"";position:absolute;inset:0;border-radius:inherit;
   background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%);
   pointer-events:none;opacity:.7;
 }
 .cell:hover{
-  transform:scale(1.35) rotate(5deg);
-  box-shadow:0 0 32px rgba(255,37,0,.75),0 0 60px rgba(255,170,0,.4);
+  transform:scale(1.22);
+  box-shadow:0 0 22px rgba(255,37,0,.7),0 0 40px rgba(255,170,0,.35);
   border-color:rgba(255,170,0,.85);
   z-index:10;
 }
-/* LEVEL 1 — quiet ember dot */
+.cell:active{transform:scale(1.1)}
 .cell[data-l="1"]{
   background:linear-gradient(160deg,#3a1310,#180808);
   border-color:rgba(255,37,0,.3);
@@ -921,7 +924,6 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   box-shadow:0 0 8px rgba(255,60,30,.9);
   animation:cellCorePulse 3s ease-in-out infinite;
 }
-/* LEVEL 2 — burning core */
 .cell[data-l="2"]{
   background:linear-gradient(160deg,#5a1d12,#1f0a07);
   border-color:rgba(255,37,0,.5);
@@ -937,40 +939,37 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   position:absolute;inset:28%;border-radius:50%;
   border:1px solid rgba(255,150,60,.55);
 }
-/* LEVEL 3 — flaming rune */
 .cell[data-l="3"]{
   background:linear-gradient(160deg,#8a2c14,#2a0d08);
   border-color:rgba(255,100,40,.7);
   box-shadow:0 0 16px rgba(255,60,20,.45),inset 0 0 12px rgba(255,120,40,.15);
 }
 .cell[data-l="3"] .cell-core{
-  width:11px;height:11px;border-radius:50%;
+  width:10px;height:10px;border-radius:50%;
   background:radial-gradient(circle,#fff5d0,#ffaa00 40%,#ff2500 80%,transparent);
   box-shadow:0 0 18px rgba(255,170,0,1),inset 0 0 6px rgba(255,255,220,.9);
   animation:cellCorePulse 2s ease-in-out infinite;
 }
 .cell[data-l="3"] .cell-ring{
-  position:absolute;inset:20%;border-radius:50%;
+  position:absolute;inset:22%;border-radius:50%;
   border:1px solid rgba(255,190,90,.75);
   box-shadow:0 0 10px rgba(255,170,0,.6);
 }
 .cell[data-l="3"] .cell-kanji{
   position:absolute;
-  font:900 11px var(--font-jp);
-  color:rgba(255,240,200,.75);
+  font:900 10px var(--font-jp);
+  color:rgba(255,240,200,.85);
   text-shadow:0 0 8px rgba(255,170,0,.9);
-  opacity:.85;
-  transform:translateY(-12px);
+  transform:translateY(-10px);
   pointer-events:none;
 }
-/* LEVEL 4 — heaven battle: blazing kanji + burst */
 .cell[data-l="4"]{
   background:linear-gradient(160deg,#c73a15,#5a1508 60%,#1a0503);
   border-color:rgba(255,216,102,.9);
   box-shadow:
-    0 0 22px rgba(255,170,0,.75),
-    0 0 40px rgba(255,37,0,.45),
-    inset 0 0 18px rgba(255,200,100,.35);
+    0 0 18px rgba(255,170,0,.75),
+    0 0 32px rgba(255,37,0,.45),
+    inset 0 0 14px rgba(255,200,100,.35);
   animation:cellBurst .5s cubic-bezier(.2,.9,.3,1.2);
 }
 .cell[data-l="4"]::after{
@@ -980,26 +979,25 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   animation:cellCorePulse 1.6s ease-in-out infinite;
 }
 .cell[data-l="4"] .cell-core{
-  width:14px;height:14px;border-radius:50%;
+  width:12px;height:12px;border-radius:50%;
   background:radial-gradient(circle,#ffffff,#ffd866 35%,#ff5022 70%,#8a0e04 100%);
-  box-shadow:0 0 24px rgba(255,220,140,1),0 0 40px rgba(255,120,40,.75),inset 0 0 8px #fff;
+  box-shadow:0 0 22px rgba(255,220,140,1),0 0 36px rgba(255,120,40,.75),inset 0 0 8px #fff;
   animation:cellCorePulse 1.4s ease-in-out infinite;
 }
 .cell[data-l="4"] .cell-ring{
-  position:absolute;inset:14%;border-radius:50%;
+  position:absolute;inset:16%;border-radius:50%;
   border:1.5px solid rgba(255,230,160,.95);
   box-shadow:0 0 14px rgba(255,200,90,.85),inset 0 0 8px rgba(255,200,90,.5);
 }
 .cell[data-l="4"] .cell-kanji{
   position:absolute;
-  font:900 13px var(--font-jp);
+  font:900 12px var(--font-jp);
   color:#fff;
   text-shadow:0 0 10px rgba(255,220,140,1),0 0 18px rgba(255,120,40,.9);
-  transform:translateY(-16px);
+  transform:translateY(-13px);
   pointer-events:none;
   animation:kanjiFloat 3s ease-in-out infinite;
 }
-/* diagonal energy slash on level 3/4 */
 .cell[data-l="3"]::after,
 .cell[data-l="4"]::after.slash{
   content:"";position:absolute;inset:0;pointer-events:none;
@@ -1008,21 +1006,21 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 }
 .cell[data-l="4"]::after.slash{opacity:.95}
 
-/* ---------- BATTLE HUD ---------- */
+/* Battle HUD — compact strip */
 .battle-hud{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:26px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;
 }
 .hud-item{
-  position:relative;padding:16px 18px 15px;border-radius:12px;overflow:hidden;
+  position:relative;padding:11px 13px 10px;border-radius:10px;overflow:hidden;
   background:linear-gradient(160deg,rgba(255,37,0,.09),rgba(0,0,0,.55));
   border:1px solid rgba(255,255,255,.08);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
   transition:border-color .3s ease,box-shadow .35s ease,transform .3s cubic-bezier(.2,.9,.3,1.2);
 }
 .hud-item::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2.5px;
   background:linear-gradient(180deg,var(--vermillion),var(--gold),var(--cyan));
-  box-shadow:0 0 18px rgba(255,37,0,.9);
+  box-shadow:0 0 14px rgba(255,37,0,.9);
 }
 .hud-item::after{
   content:"";position:absolute;right:-30%;top:-70%;width:80%;height:180%;
@@ -1030,26 +1028,26 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   pointer-events:none;
 }
 .hud-item:hover{
-  transform:translateY(-3px);
+  transform:translateY(-2px);
   border-color:rgba(255,37,0,.5);
-  box-shadow:0 20px 50px rgba(0,0,0,.7),0 0 34px rgba(255,37,0,.28),inset 0 1px 0 rgba(255,255,255,.12);
+  box-shadow:0 14px 34px rgba(0,0,0,.7),0 0 26px rgba(255,37,0,.28),inset 0 1px 0 rgba(255,255,255,.12);
 }
 .hud-label{
-  display:block;font:800 7.5px var(--font-body);letter-spacing:2.4px;
+  display:block;font:800 7px var(--font-body);letter-spacing:2.2px;
   color:var(--text-dim);text-transform:uppercase;position:relative;
 }
 .hud-item strong{
-  display:block;margin-top:9px;position:relative;
-  font:400 30px/1 var(--font-display);letter-spacing:1.6px;
+  display:block;margin-top:6px;position:relative;
+  font:400 22px/1 var(--font-display);letter-spacing:1.4px;
   background:linear-gradient(135deg,#fff 10%,#ffd866 62%,#ff5022 100%);
   -webkit-background-clip:text;background-clip:text;
   color:transparent;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 20px rgba(255,170,0,.5));
+  filter:drop-shadow(0 0 16px rgba(255,170,0,.5));
 }
-.hud-item strong.rank-name{font-size:26px;letter-spacing:2.4px}
+.hud-item strong.rank-name{font-size:17px;letter-spacing:2px}
 
 .battle-bar{
-  height:11px;margin-top:14px;border-radius:99px;position:relative;overflow:hidden;
+  height:8px;margin-top:10px;border-radius:99px;position:relative;overflow:hidden;
   background:rgba(255,255,255,.05);border:1px solid var(--line);
   box-shadow:inset 0 2px 6px rgba(0,0,0,.75);
 }
@@ -1057,69 +1055,47 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   height:100%;width:0;border-radius:99px;
   background:linear-gradient(90deg,#ff2500,#ff5022,#ffaa00,#00ccff);
   background-size:200% 100%;
-  box-shadow:0 0 26px rgba(255,37,0,.95),inset 0 0 10px rgba(255,255,255,.35);
+  box-shadow:0 0 20px rgba(255,37,0,.95),inset 0 0 10px rgba(255,255,255,.35);
   transition:width 1.1s cubic-bezier(.2,.85,.3,1);
   animation:ribbonFlow 2.6s linear infinite;
+  position:relative;
 }
 .battle-bar-fill::after{
   content:"";position:absolute;right:0;top:50%;transform:translateY(-50%);
-  width:16px;height:16px;border-radius:50%;
+  width:12px;height:12px;border-radius:50%;
   background:radial-gradient(circle,#fff,#ffaa00 40%,transparent 72%);
   filter:blur(.7px);animation:flicker 1.2s ease-in-out infinite;
 }
 .battle-line{
-  margin-top:15px;padding:11px 16px 11px 18px;
+  margin-top:10px;padding:9px 13px 9px 15px;
   border-left:2px solid var(--vermillion);
   background:linear-gradient(90deg,rgba(255,37,0,.1),transparent 72%);
-  border-radius:0 8px 8px 0;
-  font:800 9.5px/1.6 var(--font-mono);letter-spacing:1.6px;
+  border-radius:0 7px 7px 0;
+  font:800 8.5px/1.6 var(--font-mono);letter-spacing:1.4px;
   color:var(--text-2);text-transform:uppercase;
   transition:color .4s ease;
 }
-.battle-line.hot{color:var(--gold-2);text-shadow:0 0 22px rgba(255,170,0,.6)}
-
-/* ---------- CELL TOOLTIP ---------- */
-.cell-tip{
-  position:fixed;left:0;top:0;z-index:70;pointer-events:none;
-  opacity:0;transform:translate(-50%,-118%) scale(.9);
-  transition:opacity .18s ease,transform .2s cubic-bezier(.2,.9,.3,1.35);
-  background:linear-gradient(160deg,rgba(22,22,30,.98),rgba(8,8,12,.99));
-  border:1px solid rgba(255,37,0,.55);border-radius:10px;
-  padding:11px 15px;max-width:250px;
-  box-shadow:0 22px 56px rgba(0,0,0,.92),0 0 38px rgba(255,37,0,.35),inset 0 1px 0 rgba(255,255,255,.08);
-  font:600 10px/1.5 var(--font-mono);letter-spacing:.3px;color:var(--text-2);
-}
-.cell-tip.show{opacity:1;transform:translate(-50%,-134%) scale(1)}
-.cell-tip b{
-  display:block;margin-bottom:6px;
-  font:800 8.5px var(--font-mono);letter-spacing:2px;
-  color:var(--gold);text-transform:uppercase;
-}
-.cell-tip span{
-  display:block;margin-top:6px;color:var(--text-faint);
-  font-size:8.5px;letter-spacing:1.4px;text-transform:uppercase;
-}
+.battle-line.hot{color:var(--gold-2);text-shadow:0 0 18px rgba(255,170,0,.6)}
 
 .matrix-labels{
   display:grid;grid-template-columns:repeat(12,1fr);text-align:center;
-  color:var(--text-dim);font-size:8px;margin-top:14px;
-  font-family:var(--font-mono);letter-spacing:.6px;
-  gap:8px;
+  color:var(--text-dim);font-size:7.5px;margin-top:10px;
+  font-family:var(--font-mono);letter-spacing:.5px;
+  gap:6px;
 }
-.matrix-labels span{max-width:64px;margin:0 auto;width:100%}
+.matrix-labels span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* Matrix header strip with rotating quote */
 .matrix-quote{
-  position:relative;margin-top:26px;
-  padding:18px 24px 18px 60px;
+  position:relative;margin-top:16px;
+  padding:14px 20px 14px 52px;
   border-left:3px solid var(--vermillion);
   background:linear-gradient(90deg,rgba(255,37,0,.08),transparent 70%);
   border-radius:0 8px 8px 0;
   overflow:hidden;
 }
 .matrix-quote::before{
-  content:"力";position:absolute;left:14px;top:50%;transform:translateY(-50%);
-  font:900 34px var(--font-jp);
+  content:"力";position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font:900 28px var(--font-jp);
   background:linear-gradient(135deg,#ff2500,#ffaa00);
   -webkit-background-clip:text;background-clip:text;
   color:transparent;-webkit-text-fill-color:transparent;
@@ -1127,37 +1103,237 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   animation:kanjiFloat 4s ease-in-out infinite;
 }
 .matrix-quote-text{
-  font:400 20px/1.3 var(--font-display);letter-spacing:1.4px;
+  font:400 17px/1.3 var(--font-display);letter-spacing:1.2px;
   text-transform:uppercase;
   color:var(--text);opacity:.95;
   transition:opacity .4s ease;
 }
 .matrix-quote-text.flip{animation:quoteSlide 6s ease-in-out}
 .matrix-quote-author{
-  display:block;margin-top:6px;
-  font:800 8px var(--font-mono);letter-spacing:2.6px;
+  display:block;margin-top:5px;
+  font:800 7.5px var(--font-mono);letter-spacing:2.4px;
   color:var(--vermillion);text-transform:uppercase;
 }
 
 .matrix-legend{
-  display:flex;align-items:center;gap:10px;margin-top:24px;
-  color:var(--text-dim);font:800 8px var(--font-body);
-  letter-spacing:2px;text-transform:uppercase;flex-wrap:wrap;
+  display:flex;align-items:center;gap:9px;margin-top:16px;
+  color:var(--text-dim);font:800 7.5px var(--font-body);
+  letter-spacing:1.8px;text-transform:uppercase;flex-wrap:wrap;
 }
 .matrix-legend .swatch{
-  width:16px;height:16px;border-radius:4px;display:inline-block;
+  width:13px;height:13px;border-radius:3px;display:inline-block;
   border:1px solid rgba(255,255,255,.06);background:linear-gradient(160deg,#0e0e16,#07070c);
   position:relative;
 }
 .swatch[data-l="1"]{background:linear-gradient(160deg,#3a1310,#180808);border-color:rgba(255,37,0,.3)}
-.swatch[data-l="2"]{background:linear-gradient(160deg,#5a1d12,#1f0a07);border-color:rgba(255,37,0,.5);box-shadow:0 0 8px rgba(255,37,0,.3)}
-.swatch[data-l="3"]{background:linear-gradient(160deg,#8a2c14,#2a0d08);border-color:rgba(255,100,40,.7);box-shadow:0 0 12px rgba(255,60,20,.5)}
-.swatch[data-l="4"]{background:linear-gradient(160deg,#c73a15,#5a1508);border-color:rgba(255,216,102,.9);box-shadow:0 0 16px rgba(255,170,0,.75)}
+.swatch[data-l="2"]{background:linear-gradient(160deg,#5a1d12,#1f0a07);border-color:rgba(255,37,0,.5);box-shadow:0 0 6px rgba(255,37,0,.3)}
+.swatch[data-l="3"]{background:linear-gradient(160deg,#8a2c14,#2a0d08);border-color:rgba(255,100,40,.7);box-shadow:0 0 10px rgba(255,60,20,.5)}
+.swatch[data-l="4"]{background:linear-gradient(160deg,#c73a15,#5a1508);border-color:rgba(255,216,102,.9);box-shadow:0 0 14px rgba(255,170,0,.75)}
 .matrix-legend .lbl-dot{
-  width:6px;height:6px;border-radius:50%;
+  width:5px;height:5px;border-radius:50%;
   background:radial-gradient(circle,#fff,#ffaa00);
   box-shadow:0 0 8px rgba(255,170,0,.9);
-  margin-left:4px;
+  margin-left:3px;
+}
+
+/* ============================================================
+   CELL DETAIL MODAL — battle dossier
+   ============================================================ */
+.cell-modal{
+  position:fixed;inset:0;z-index:180;
+  display:grid;place-items:center;padding:20px;
+  background:rgba(2,2,5,.78);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  opacity:0;pointer-events:none;
+  transition:opacity .28s ease;
+}
+.cell-modal.show{opacity:1;pointer-events:auto}
+.cell-modal-box{
+  position:relative;width:min(460px,100%);
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 0%,rgba(255,37,0,.15),transparent 60%),
+    linear-gradient(155deg,#0e0e16,#07070c);
+  border:1px solid rgba(255,37,0,.4);border-radius:18px;
+  padding:28px 26px 24px;
+  box-shadow:
+    0 50px 120px rgba(0,0,0,.92),
+    0 0 90px rgba(255,37,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  transform:translateY(24px) scale(.94);
+  transition:transform .35s cubic-bezier(.2,.9,.3,1.2);
+  max-height:85vh;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.cell-modal.show .cell-modal-box{transform:none}
+.cell-modal-box::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--vermillion),var(--gold),var(--cyan),transparent);
+  background-size:200% 100%;animation:ribbonFlow 2.4s linear infinite;
+  border-radius:18px 18px 0 0;
+}
+.cm-close{
+  position:absolute;right:12px;top:12px;
+  width:32px;height:32px;border-radius:9px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  color:var(--text-2);font-size:13px;font-weight:800;
+  display:grid;place-items:center;cursor:pointer;
+  transition:all .25s ease;z-index:5;
+}
+.cm-close:hover{
+  background:rgba(255,37,0,.2);border-color:rgba(255,37,0,.6);color:#fff;
+  box-shadow:0 0 24px rgba(255,37,0,.45);
+  transform:rotate(90deg);
+}
+.cm-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;padding-right:34px}
+.cm-rank-badge{
+  width:56px;height:56px;border-radius:14px;flex-shrink:0;
+  display:grid;place-items:center;
+  font:900 22px/1 var(--font-jp);
+  border:1.5px solid;
+  position:relative;
+}
+.cm-rank-badge[data-l="0"]{
+  background:linear-gradient(160deg,#15151c,#0a0a10);
+  border-color:rgba(255,255,255,.12);color:var(--text-dim);
+}
+.cm-rank-badge[data-l="1"]{
+  background:linear-gradient(160deg,#3a1310,#180808);
+  border-color:rgba(255,37,0,.45);color:#ff7a5a;
+  box-shadow:0 0 22px rgba(255,37,0,.35);
+}
+.cm-rank-badge[data-l="2"]{
+  background:linear-gradient(160deg,#5a1d12,#1f0a07);
+  border-color:rgba(255,90,40,.7);color:#ffaa00;
+  box-shadow:0 0 28px rgba(255,60,20,.5);
+}
+.cm-rank-badge[data-l="3"]{
+  background:linear-gradient(160deg,#8a2c14,#2a0d08);
+  border-color:rgba(255,170,0,.85);color:#ffd866;
+  box-shadow:0 0 34px rgba(255,170,0,.6);
+}
+.cm-rank-badge[data-l="4"]{
+  background:linear-gradient(160deg,#c73a15,#5a1508);
+  border-color:rgba(255,216,102,.95);color:#fff;
+  box-shadow:0 0 42px rgba(255,170,0,.8),0 0 60px rgba(255,37,0,.4);
+  animation:cellCorePulse 2s ease-in-out infinite;
+}
+.cm-meta{flex:1;min-width:0}
+.cm-eyebrow{
+  font:800 8px var(--font-mono);letter-spacing:2.6px;
+  color:var(--text-dim);text-transform:uppercase;
+}
+.cm-title{
+  font:400 34px/1 var(--font-display);letter-spacing:2px;
+  margin-top:6px;
+  background:linear-gradient(135deg,#fff 20%,#ff5022 100%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+}
+.cm-rank-name{
+  display:inline-flex;align-items:center;gap:7px;margin-top:8px;
+  font:800 8px var(--font-body);letter-spacing:2.2px;
+  color:var(--gold);text-transform:uppercase;
+}
+.cm-rank-name::before{
+  content:"";width:5px;height:5px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 10px rgba(255,170,0,1);
+}
+.cm-section-title{
+  font:800 7.5px var(--font-mono);letter-spacing:2.6px;
+  color:var(--text-dim);text-transform:uppercase;
+  margin:20px 0 8px;padding-bottom:7px;
+  border-bottom:1px solid var(--line-soft);
+}
+.cm-session{
+  margin-bottom:14px;padding:12px 14px;
+  border-radius:11px;
+  background:linear-gradient(160deg,rgba(255,255,255,.025),transparent);
+  border:1px solid var(--line-soft);
+}
+.cm-session-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:9px;
+}
+.cm-session-num{
+  font:800 8px var(--font-mono);letter-spacing:2px;
+  color:var(--vermillion);text-transform:uppercase;
+}
+.cm-session-date{
+  font:800 8px var(--font-mono);letter-spacing:1.5px;
+  color:var(--text-faint);text-transform:uppercase;
+}
+.cm-exercise{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:7px 0;
+  font-size:12px;
+  border-top:1px solid rgba(255,255,255,.03);
+}
+.cm-exercise:first-of-type{border-top:0;padding-top:2px}
+.cm-ex-name{
+  color:var(--text);font-weight:600;letter-spacing:.2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.cm-ex-detail{
+  color:var(--gold);font-family:var(--font-mono);font-size:10px;
+  font-weight:600;letter-spacing:.2px;flex-shrink:0;
+}
+.cm-ex-detail .sep{color:var(--text-faint);margin:0 4px}
+.cm-empty-msg{
+  padding:22px 18px;text-align:center;
+  background:linear-gradient(160deg,rgba(255,255,255,.02),transparent);
+  border:1px dashed rgba(255,255,255,.08);border-radius:12px;
+  color:var(--text-dim);font-size:11px;line-height:1.8;
+  letter-spacing:.3px;
+}
+.cm-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;
+}
+.cm-stat{
+  padding:10px 12px;border-radius:10px;
+  background:linear-gradient(160deg,rgba(255,255,255,.03),transparent);
+  border:1px solid var(--line-soft);
+  position:relative;overflow:hidden;
+}
+.cm-stat::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--vermillion),var(--gold));
+  opacity:.7;
+}
+.cm-stat-label{
+  display:block;font:800 7px var(--font-body);letter-spacing:1.8px;
+  color:var(--text-dim);text-transform:uppercase;
+}
+.cm-stat-value{
+  display:block;margin-top:5px;
+  font:400 24px/1 var(--font-display);letter-spacing:1px;
+  background:linear-gradient(135deg,#fff,#ffd866);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 12px rgba(255,170,0,.4));
+}
+.cm-quote{
+  position:relative;margin-top:18px;padding:16px 16px 16px 44px;
+  background:linear-gradient(90deg,rgba(255,37,0,.1),transparent 80%);
+  border-left:3px solid var(--vermillion);
+  border-radius:0 10px 10px 0;
+}
+.cm-quote::before{
+  content:"力";position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  font:900 22px var(--font-jp);
+  background:linear-gradient(135deg,#ff2500,#ffaa00);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 10px rgba(255,37,0,.85));
+}
+.cm-quote-text{
+  font:400 15px/1.4 var(--font-display);letter-spacing:.7px;
+  text-transform:uppercase;color:var(--text);
+}
+.cm-quote-author{
+  display:block;margin-top:7px;
+  font:800 7.5px var(--font-mono);letter-spacing:2.2px;
+  color:var(--vermillion);text-transform:uppercase;
 }
 
 /* ============================================================
@@ -1455,18 +1631,16 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   .fields{grid-column:2;margin-top:12px}
   .fields input{width:80px}
   .chartbox{height:260px}
-  .matrix{gap:5px}
-  .cell{max-width:44px}
-  .matrix-labels{gap:5px;font-size:7px}
-  .matrix-labels span{max-width:44px}
-  .matrix-quote{padding:16px 18px 16px 50px}
-  .matrix-quote::before{font-size:26px;left:10px}
-  .matrix-quote-text{font-size:16px}
-  .battle-hud{grid-template-columns:repeat(2,1fr);gap:8px}
-  .hud-item{padding:12px 14px 11px}
-  .hud-item strong{font-size:22px}
-  .hud-item strong.rank-name{font-size:18px;letter-spacing:1.6px}
-  .battle-line{font-size:8px;letter-spacing:1.1px;padding:10px 12px 10px 14px}
+  .matrix{gap:4px}
+  .matrix-labels{gap:4px;font-size:6.5px}
+  .matrix-quote{padding:12px 16px 12px 44px}
+  .matrix-quote::before{font-size:22px;left:10px}
+  .matrix-quote-text{font-size:14px}
+  .battle-hud{grid-template-columns:repeat(2,1fr);gap:6px}
+  .hud-item{padding:9px 11px 8px}
+  .hud-item strong{font-size:18px}
+  .hud-item strong.rank-name{font-size:14px;letter-spacing:1.4px}
+  .battle-line{font-size:7.5px;letter-spacing:1px;padding:8px 11px 8px 13px}
   .section-title{font-size:36px;padding-left:22px}
   .section-title::before{width:6px}
   .section-sub{padding-left:22px}
@@ -1489,6 +1663,9 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   .auth-corner.tl,.auth-corner.bl{left:12px}
   .auth-corner.tr,.auth-corner.br{right:12px}
   .auth-corner.bl,.auth-corner.br{bottom:12px}
+  .cell-modal-box{padding:24px 20px 20px;border-radius:16px}
+  .cm-title{font-size:28px}
+  .cm-rank-badge{width:48px;height:48px;font-size:18px;border-radius:12px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{
@@ -1638,15 +1815,14 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
       <div class="section-head">
         <div>
           <div class="section-title"><small>Density</small>12-Week Matrix</div>
-          <div class="section-sub">Every conquered day leaves a scar. Read the battlefield.</div>
+          <div class="section-sub">Tap any block to open its battle dossier. Every scar recorded.</div>
         </div>
       </div>
 
-      <!-- ===== BATTLE HUD ===== -->
       <div class="battle-hud">
         <div class="hud-item"><span class="hud-label">Battle Rank</span><strong class="rank-name" id="battleRank">MORTAL</strong></div>
-        <div class="hud-item"><span class="hud-label">Ground Conquered</span><strong id="battleConquered">0 / 0</strong></div>
-        <div class="hud-item"><span class="hud-label">Unbroken Streak</span><strong id="battleStreak">0w</strong></div>
+        <div class="hud-item"><span class="hud-label">Ground Taken</span><strong id="battleConquered">0/0</strong></div>
+        <div class="hud-item"><span class="hud-label">Streak</span><strong id="battleStreak">0w</strong></div>
         <div class="hud-item"><span class="hud-label">Peak Week</span><strong id="battlePeak">0</strong></div>
       </div>
       <div class="battle-bar"><div class="battle-bar-fill" id="battleBarFill"></div></div>
@@ -1655,7 +1831,6 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
       <div class="matrix-wrap">
         <div id="matrix" class="matrix"></div>
         <div id="labels" class="matrix-labels"></div>
-        <div id="cellTip" class="cell-tip" aria-hidden="true"></div>
       </div>
 
       <div class="matrix-quote">
@@ -1663,7 +1838,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
         <span class="matrix-quote-author" id="matrixQuoteAuthor"></span>
       </div>
       <div class="matrix-legend">
-        <span>Cold Ground</span>
+        <span>Cold</span>
         <i class="swatch" data-l="0"></i>
         <span>Ember</span>
         <i class="swatch" data-l="1"></i>
@@ -1699,6 +1874,14 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 <div id="toast" class="hidden"></div>
 <div id="flash" class="flash" aria-hidden="true"></div>
 
+<!-- ===== CELL DETAIL MODAL — battle dossier ===== -->
+<div id="cellModal" class="cell-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="cell-modal-box">
+    <button class="cm-close" onclick="hideCellDetail()" aria-label="Close dossier">✕</button>
+    <div id="cellModalContent"></div>
+  </div>
+</div>
+
 <script>
 /* ============================================================
    CORE — data layer with STRICT program isolation
@@ -1724,7 +1907,7 @@ const plans={
   }
 };
 
-/* ---- QUOTES: the badass + heaven battle + Goku/Demon Slayer tier ---- */
+/* ---- QUOTES: hard mode / mentality ---- */
 const quotes=[
   {text:"Your body ain't tired. Your body is fucking lying. It starts crying at 40 % and calls it a limit. Don't negotiate with a liar. Go get the other 60% .",author:"All fruit so cute"},
   {text:"Stay Fucking hard.",author:"All fruit so cute"},
@@ -1744,7 +1927,7 @@ const quotes=[
   {text:"The version of you that quits today never meets the one waiting after this set.",author:"FIT15 PROTOCOL"}
 ];
 
-/* ---- MATRIX QUOTES: heaven-battle, Goku, Demon Slayer flavor ---- */
+/* ---- MATRIX QUOTES: rotating header ---- */
 const matrixQuotes=[
   {text:"Every breath is a rep. Every heartbeat a battle cry.",author:"HEAVEN PROTOCOL"},
   {text:"Pain is the currency of power. Pay it in full.",author:"HEAVEN PROTOCOL"},
@@ -1763,7 +1946,125 @@ const matrixQuotes=[
   {text:"Every scar a scripture. Every rep a prayer.",author:"HEAVEN PROTOCOL"}
 ];
 
-/* ---- BATTLE RANKS for the 12-week matrix ---- */
+/* ---- BATTLE QUOTES: one per matrix cell ---- */
+const BATTLE_QUOTES=[
+  /* Goggins-inspired — war doctrine */
+  {text:"You are not tired. You are just soft. And soft gets left behind.",author:"WAR DOCTRINE"},
+  {text:"Stay hard when it's easy to stay comfortable.",author:"WAR DOCTRINE"},
+  {text:"Who's going to carry the boats when your legs are screaming?",author:"WAR DOCTRINE"},
+  {text:"The voice telling you to stop is a liar. Do not listen.",author:"WAR DOCTRINE"},
+  {text:"Suffer the pain of discipline or suffer the pain of regret.",author:"WAR DOCTRINE"},
+  {text:"You don't know your limits until you have gone past them.",author:"WAR DOCTRINE"},
+  {text:"Hard times don't build character. They reveal it.",author:"WAR DOCTRINE"},
+  {text:"Every rep is a vote for the person you're becoming.",author:"WAR DOCTRINE"},
+  {text:"The grind doesn't care about your feelings.",author:"WAR DOCTRINE"},
+  {text:"Be the hardest worker in every room you enter.",author:"WAR DOCTRINE"},
+  {text:"Your mind quits before your body does. Prove it wrong.",author:"WAR DOCTRINE"},
+  {text:"Nobody is coming to save you. Get up.",author:"WAR DOCTRINE"},
+  {text:"Discipline is freedom. Excuses are chains.",author:"WAR DOCTRINE"},
+  {text:"You want the body? Pay the price in sweat.",author:"WAR DOCTRINE"},
+  {text:"Weakness is a choice. So is strength. Choose again.",author:"WAR DOCTRINE"},
+  /* Demon Slayer-inspired */
+  {text:"Set your heart ablaze. Let nothing extinguish it.",author:"FLAME HASHIRA"},
+  {text:"Total concentration. Every breath is a weapon.",author:"BREATHING FORM"},
+  {text:"Breathe. Focus. Cut through the darkness.",author:"BREATHING FORM"},
+  {text:"The blade is only as sharp as the will that wields it.",author:"SLAYER DOCTRINE"},
+  {text:"Even demons fall to those who never stop swinging.",author:"SLAYER DOCTRINE"},
+  {text:"Dance of the fire god. Move without hesitation.",author:"HINOKAMI KAGURA"},
+  {text:"A slayer's strength is forged in the hours no one sees.",author:"SLAYER DOCTRINE"},
+  {text:"Water flows. Flame burns. You endure.",author:"BREATHING FORM"},
+  {text:"Master the breath. Master the self. Master the blade.",author:"BREATHING FORM"},
+  {text:"The corps doesn't need talent. It needs those who refuse to fall.",author:"SLAYER DOCTRINE"},
+  {text:"Thunder breathing. First form. One strike, one kill.",author:"THUNDER FORM"},
+  {text:"Beast breathing. Tear through what stands before you.",author:"BEAST FORM"},
+  {text:"Mist breathing. Obscure the pain. Cut anyway.",author:"MIST FORM"},
+  {text:"Love breathing. Fight like those you protect are watching.",author:"LOVE FORM"},
+  {text:"Sound breathing. Rhythm is the heartbeat of victory.",author:"SOUND FORM"},
+  /* Goku / Saiyan-inspired */
+  {text:"Every battle makes you stronger. Every defeat, a lesson.",author:"SAIYAN CODE"},
+  {text:"I don't fight to win. I fight to grow.",author:"SAIYAN CODE"},
+  {text:"Power comes from pushing past what you thought was possible.",author:"SAIYAN CODE"},
+  {text:"A Saiyan's pride is forged in combat.",author:"SAIYAN CODE"},
+  {text:"The stronger the opponent, the sweeter the victory.",author:"SAIYAN CODE"},
+  {text:"I am the hope of the universe. And I train like it.",author:"SAIYAN CODE"},
+  {text:"You haven't seen my final form yet.",author:"SAIYAN CODE"},
+  {text:"Limits are just the beginning of the next level.",author:"SAIYAN CODE"},
+  {text:"Every time I break, I rebuild stronger.",author:"SAIYAN CODE"},
+  {text:"Train like the fate of the world depends on it — because it does.",author:"SAIYAN CODE"},
+  {text:"Power level isn't given. It's earned in silence.",author:"SAIYAN CODE"},
+  {text:"Surpass your limits. Right here. Right now.",author:"SAIYAN CODE"},
+  {text:"The fight is not over. It has not even started.",author:"SAIYAN CODE"},
+  {text:"Pain is proof you're still in the fight. Use it.",author:"SAIYAN CODE"},
+  {text:"You don't need a transformation. You need a decision.",author:"SAIYAN CODE"},
+  /* Naruto-inspired */
+  {text:"I never go back on my word. That is my ninja way.",author:"NINJA WAY"},
+  {text:"Hard work beats talent when talent doesn't work hard.",author:"NINJA WAY"},
+  {text:"A ninja's true strength is in never giving up.",author:"NINJA WAY"},
+  {text:"Believe in yourself. Then make it real.",author:"NINJA WAY"},
+  {text:"The will of fire burns in every step you take.",author:"WILL OF FIRE"},
+  {text:"Even a failure can become the strongest.",author:"NINJA WAY"},
+  {text:"Your path may be lonely, but it is yours.",author:"NINJA WAY"},
+  {text:"Chase the dream. Catch it. Then chase a bigger one.",author:"NINJA WAY"},
+  {text:"The difference between the strong and the weak is one more step.",author:"NINJA WAY"},
+  {text:"I'll never run from a fight I can win.",author:"NINJA WAY"},
+  {text:"Talk is cheap. Show me your resolve.",author:"NINJA WAY"},
+  {text:"A shinobi endures. That is the way.",author:"NINJA WAY"},
+  {text:"A true ninja never blames the tools. He forges them.",author:"NINJA WAY"},
+  {text:"Failure is not the end. It is the first page.",author:"NINJA WAY"},
+  {text:"Protect what matters. Become strong enough to do it.",author:"NINJA WAY"},
+  /* Strong messages */
+  {text:"Discipline is the bridge between who you are and who you're meant to be.",author:"IRON DOCTRINE"},
+  {text:"You are one workout away from a better mood.",author:"IRON DOCTRINE"},
+  {text:"The body achieves what the mind believes.",author:"IRON DOCTRINE"},
+  {text:"Excuses are the nails used to build a house of failure.",author:"IRON DOCTRINE"},
+  {text:"The pain you feel today will be the strength you feel tomorrow.",author:"IRON DOCTRINE"},
+  {text:"Success is the sum of small efforts repeated day in and day out.",author:"IRON DOCTRINE"},
+  {text:"Motivation gets you started. Habit keeps you going.",author:"IRON DOCTRINE"},
+  {text:"Your only limit is you.",author:"IRON DOCTRINE"},
+  {text:"Fall seven times. Stand up eight.",author:"IRON DOCTRINE"},
+  {text:"The iron never lies. It gives back exactly what you put in.",author:"IRON DOCTRINE"},
+  {text:"One more rep. One more breath. One more battle.",author:"IRON DOCTRINE"},
+  {text:"Champions are made in the dark, not the spotlight.",author:"IRON DOCTRINE"},
+  {text:"The fire you feel today is the strength you carry tomorrow.",author:"IRON DOCTRINE"},
+  {text:"You don't rise to the occasion. You fall to your training.",author:"IRON DOCTRINE"},
+  {text:"Suffer now, or suffer forever. Choose.",author:"IRON DOCTRINE"},
+  {text:"The body is the blade. Train it until it cuts.",author:"IRON DOCTRINE"},
+  {text:"When your legs fail, your heart carries you.",author:"IRON DOCTRINE"},
+  {text:"There is no shortcut. Only the long, honest road.",author:"IRON DOCTRINE"},
+  {text:"Every scar is a story. Make yours worth telling.",author:"IRON DOCTRINE"},
+  {text:"Pain is temporary. Pride is forever.",author:"IRON DOCTRINE"},
+  {text:"The weak complain. The strong train.",author:"IRON DOCTRINE"},
+  {text:"You will never regret the workout you did. Only the ones you skipped.",author:"IRON DOCTRINE"},
+  {text:"Become the person your future self would thank.",author:"IRON DOCTRINE"},
+  {text:"The last three reps are the ones that count.",author:"IRON DOCTRINE"},
+  {text:"Discipline is choosing what you want most over what you want now.",author:"IRON DOCTRINE"},
+  {text:"Silence the doubt. Feed the fire.",author:"IRON DOCTRINE"},
+  {text:"Your body can take it. Tell your mind to shut up.",author:"IRON DOCTRINE"},
+  {text:"Train hard. Fight easy.",author:"IRON DOCTRINE"},
+  {text:"Sweat now. Shine later.",author:"IRON DOCTRINE"},
+  {text:"Consistency is the deadliest weapon in your arsenal.",author:"IRON DOCTRINE"},
+  {text:"You are not the person you were yesterday. Prove it.",author:"IRON DOCTRINE"},
+  {text:"The mountain doesn't move. You climb.",author:"IRON DOCTRINE"},
+  {text:"Strong minds build strong bodies. Start with the mind.",author:"IRON DOCTRINE"},
+  {text:"Every session is a promise kept to yourself.",author:"IRON DOCTRINE"},
+  {text:"The blade sharpens through use, not intention.",author:"IRON DOCTRINE"},
+  {text:"You don't find willpower. You build it.",author:"IRON DOCTRINE"},
+  {text:"The fire inside burns brighter with every rep.",author:"IRON DOCTRINE"},
+  {text:"Nobody will do the reps for you. Rise.",author:"IRON DOCTRINE"},
+  {text:"Your future self is watching. Make them proud.",author:"IRON DOCTRINE"},
+  {text:"Every cell in the matrix is a battle you chose to fight.",author:"IRON DOCTRINE"}
+];
+
+/* ---- CELL RANKS ---- */
+const CELL_RANKS=[
+  {name:"UNCLAIMED", kanji:"虚", tier:"No claim"},
+  {name:"EMBER",     kanji:"火", tier:"Initiate"},
+  {name:"BURNING",   kanji:"炎", tier:"Disciple"},
+  {name:"BLAZING",   kanji:"烈", tier:"Warrior"},
+  {name:"HEAVEN",    kanji:"天", tier:"Master"}
+];
+
+/* ---- BATTLE RANKS (HUD) ---- */
 const BATTLE_RANKS=[
   {p:0.00,name:'MORTAL',        line:'The battlefield is silent. Light the first flame.'},
   {p:0.05,name:'EMBER DISCIPLE',line:'A spark has caught. The dark has noticed you.'},
@@ -1774,16 +2075,12 @@ const BATTLE_RANKS=[
   {p:0.75,name:'HEAVEN BREAKER',line:'The heavens tremble. You have become the battle.'},
   {p:0.90,name:'DIVINE',        line:'Gods bleed where you train. Absolute. Unbroken.'}
 ];
-const CELL_TITLE={0:'UNCLAIMED',1:'EMBER',2:'BURNING',3:'BLAZING',4:'HEAVEN'};
-const CELL_LORE={
-  0:'The ground lies cold. No fire was lit here.',
-  1:'One session. A single spark in the dark.',
-  2:'Two sessions. The flame takes hold.',
-  3:'Three sessions. Blazing — the enemy retreats.',
-  4:'Four sessions. HEAVEN TIER — the sky splits open.'
-};
+
+const KANJI_POOL=['火','炎','雷','力','氣','龍','虎','斬','神','剣','滅','天'];
+const DAY_OFFSET={MON:0,TUE:1,WED:2,THU:3,FRI:4,SAT:5,SUN:6};
 
 let program='male',currentUser=null,data=[],active='MON',chart=null,mode='sessions',quoteIndex=0,matrixQuoteIndex=0;
+let matrixCellData={};
 const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const uid=()=>currentUser?.id||null;
 const currentPlans=()=>plans[program];
@@ -1892,39 +2189,75 @@ function renderHistory(){
   h.innerHTML=s.slice(0,10).map((w,i)=>`<div class="history-row"><div><b>${new Date(w.date).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})} · ${w.day}</b><small>${w.name} • ${w.ex.map(x=>x.exercise).join(' · ')}</small></div><button class="delete" onclick="del(${i})">DELETE</button></div>`).join('');
 }
 
-/* ---- MATRIX RENDER — cells now carry content based on level ---- */
+/* ---- MATRIX RENDER — 12 columns (weeks) × days rows ---- */
+function buildCellInner(lvl, w, dayIdx){
+  if(lvl===0) return '';
+  const glyph = lvl>=3 ? KANJI_POOL[(w*7+dayIdx*3)%KANJI_POOL.length] : '';
+  if(lvl===1) return `<span class="cell-core"></span>`;
+  if(lvl===2) return `<span class="cell-core"></span><span class="cell-ring"></span>`;
+  if(lvl===3) return `<span class="cell-kanji">${glyph}</span><span class="cell-core"></span><span class="cell-ring"></span>`;
+  return `<span class="cell-kanji">${glyph}</span><span class="cell-core"></span><span class="cell-ring"></span>`;
+}
+
 function renderMatrix(){
-  const s=sessions(),m=document.getElementById('matrix'),l=document.getElementById('labels'),cells=[],labs=[],days=Object.keys(currentPlans());
-  const KANJI_POOL=['火','炎','雷','力','氣','龍','虎','斬','神','剣','滅','天'];
+  const s=sessions();
+  const m=document.getElementById('matrix');
+  const l=document.getElementById('labels');
+  const days=Object.keys(currentPlans());
+
+  matrixCellData={};
+  const cells=[];
+  const labs=[];
   let conquered=0;
-  const weekTotals=[];
+  const weekTotals=new Array(12).fill(0);
+
+  const weeksRef=[];
   for(let w=11;w>=0;w--){
-    const d=new Date();d.setDate(d.getDate()-w*7);
-    const wk=week(d);
-    const wkLabel=d.toLocaleDateString(undefined,{month:'numeric',day:'numeric'});
-    labs.push(wkLabel);
-    let wkTotal=0;
-    for(const day of days){
-      const n=s.filter(x=>x.day===day&&week(x.date)===wk).length;
+    const d=new Date();
+    d.setDate(d.getDate()-w*7);
+    weeksRef.push({
+      label:d.toLocaleDateString(undefined,{month:'numeric',day:'numeric'}),
+      key:week(d),
+      dateObj:new Date(d)
+    });
+  }
+
+  /* Day-major order: each row = a day, each column = a week */
+  for(let dayIdx=0;dayIdx<days.length;dayIdx++){
+    const day=days[dayIdx];
+    for(let w=0;w<12;w++){
+      const wk=weeksRef[w];
+      const daySessions=s.filter(x=>x.day===day && week(x.date)===wk.key);
+      const n=daySessions.length;
       const lvl=Math.min(4,n);
       if(lvl>0)conquered++;
-      wkTotal+=n;
-      let glyph='';
-      if(lvl>=3){
-        const seed=(w*7+day.charCodeAt(0))%KANJI_POOL.length;
-        glyph=KANJI_POOL[seed];
-      }
-      const inner=
-        lvl===0 ? '' :
-        lvl===1 ? `<span class="cell-core"></span>` :
-        lvl===2 ? `<span class="cell-core"></span><span class="cell-ring"></span>` :
-        lvl===3 ? `<span class="cell-kanji">${glyph}</span><span class="cell-core"></span><span class="cell-ring"></span>` :
-                  `<span class="cell-kanji">${glyph}</span><span class="cell-core"></span><span class="cell-ring"></span>`;
-      cells.push(`<div class="cell" data-l="${lvl}" data-title="${CELL_TITLE[lvl]}" data-msg="${CELL_LORE[lvl]}" data-day="${day}" data-week="${wkLabel}" data-n="${n}">${inner}</div>`);
+      weekTotals[w]+=n;
+
+      /* exact date of this cell */
+      const cellDate=new Date(wk.dateObj);
+      cellDate.setDate(cellDate.getDate()+(DAY_OFFSET[day]||0));
+
+      const key=`${w}-${day}`;
+      const quote=BATTLE_QUOTES[(w*7+dayIdx*17+lvl*3)%BATTLE_QUOTES.length];
+
+      matrixCellData[key]={
+        day, dayIdx, weekIdx:w,
+        weekLabel:wk.label,
+        cellDate,
+        sessions:daySessions,
+        level:lvl,
+        count:n,
+        quote,
+        rank:CELL_RANKS[lvl]
+      };
+
+      cells.push(`<div class="cell" data-l="${lvl}" data-key="${key}" tabindex="0" role="button" aria-label="${day} week of ${wk.label} — ${n} session${n===1?'':'s'}">${buildCellInner(lvl,w,dayIdx)}</div>`);
     }
-    weekTotals.push(wkTotal);
   }
-  m.style.gridTemplateColumns=`repeat(${days.length},1fr)`;
+
+  weeksRef.forEach(wk=>labs.push(wk.label));
+
+  m.style.gridTemplateColumns='repeat(12,1fr)';
   l.style.gridTemplateColumns='repeat(12,1fr)';
   m.innerHTML=cells.join('');
   l.innerHTML=labs.map(x=>`<span>${x}</span>`).join('');
@@ -1943,7 +2276,7 @@ function renderMatrix(){
   const lineEl=document.getElementById('battleLine');
 
   if(rankEl)rankEl.textContent=rank.name;
-  if(conqEl)conqEl.textContent=conquered+' / '+total;
+  if(conqEl)conqEl.textContent=conquered+'/'+total;
 
   let streak=0;
   for(let i=weekTotals.length-1;i>=0;i--){
@@ -1967,27 +2300,117 @@ function renderMatrix(){
   }
 }
 
-/* ---- battle tooltip for matrix cells ---- */
-function initCellTip(){
-  const m=document.getElementById('matrix'),tip=document.getElementById('cellTip');
-  if(!m||!tip)return;
-  m.addEventListener('mouseover',e=>{
+/* ---- CELL DETAIL MODAL ---- */
+function showCellDetail(key){
+  const d=matrixCellData[key];
+  if(!d)return;
+  const modal=document.getElementById('cellModal');
+  const content=document.getElementById('cellModalContent');
+
+  const {day, weekIdx, weekLabel, cellDate, sessions:ss, level, count, quote, rank}=d;
+
+  /* group exercises across sessions; also keep per-session detail */
+  let totalReps=0, totalSets=0;
+  const sessionBlocks=ss.map((sess,idx)=>{
+    const dateStr=new Date(sess.date).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    const exercisesHTML=sess.ex.map(row=>{
+      const reps=row.reps?`${row.reps} reps`:'';
+      const sets=row.sets?`${row.sets} sets`:'';
+      const weight=row.weight?`${row.weight}kg`:'';
+      const parts=[reps,sets,weight].filter(Boolean);
+      totalReps+=(Number(row.reps)||0);
+      totalSets+=(Number(row.sets)||0);
+      return `<div class="cm-exercise">
+        <span class="cm-ex-name">${escapeHtml(row.exercise)}</span>
+        <span class="cm-ex-detail">${parts.join(' <span class="sep">·</span> ')||'—'}</span>
+      </div>`;
+    }).join('');
+    return `<div class="cm-session">
+      <div class="cm-session-head">
+        <span class="cm-session-num">Session ${String(idx+1).padStart(2,'0')}</span>
+        <span class="cm-session-date">${dateStr}</span>
+      </div>
+      ${exercisesHTML}
+    </div>`;
+  }).join('');
+
+  const bodyHTML=ss.length===0
+    ? `<div class="cm-empty-msg">No sessions logged here.<br>The ground lies cold. Light the first flame.</div>`
+    : sessionBlocks;
+
+  content.innerHTML=`
+    <div class="cm-header">
+      <div class="cm-rank-badge" data-l="${level}">${rank.kanji}</div>
+      <div class="cm-meta">
+        <div class="cm-eyebrow">Week ${weekIdx+1} · ${weekLabel} · ${cellDate.toLocaleDateString(undefined,{weekday:'short'})}</div>
+        <div class="cm-title">${day}</div>
+        <div class="cm-rank-name">${rank.name}${rank.tier!=='No claim'?' · '+rank.tier:''}</div>
+      </div>
+    </div>
+
+    <div class="cm-section-title">Exercises</div>
+    ${bodyHTML}
+
+    ${count>0?`
+      <div class="cm-stats">
+        <div class="cm-stat"><span class="cm-stat-label">Sessions</span><span class="cm-stat-value">${count}</span></div>
+        <div class="cm-stat"><span class="cm-stat-label">Total Reps</span><span class="cm-stat-value">${totalReps}</span></div>
+        <div class="cm-stat"><span class="cm-stat-label">Total Sets</span><span class="cm-stat-value">${totalSets}</span></div>
+      </div>
+    `:''}
+
+    <div class="cm-quote">
+      <div class="cm-quote-text">${escapeHtml(quote.text)}</div>
+      <span class="cm-quote-author">— ${escapeHtml(quote.author)}</span>
+    </div>
+  `;
+
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+
+  if(!prefersReduced)thunderStrike({intensity:0.35});
+}
+
+function hideCellDetail(){
+  const modal=document.getElementById('cellModal');
+  if(!modal)return;
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---- matrix click + keyboard ---- */
+function initCellInteraction(){
+  const m=document.getElementById('matrix');
+  if(!m)return;
+  m.addEventListener('click',e=>{
     const c=e.target.closest('.cell');
     if(!c)return;
-    const n=Number(c.dataset.n)||0;
-    tip.innerHTML=`<b>${c.dataset.title} · ${c.dataset.day} ${c.dataset.week}</b>${c.dataset.msg}<span>${n} session${n===1?'':'s'} logged</span>`;
-    tip.classList.add('show');
+    const key=c.dataset.key;
+    if(key)showCellDetail(key);
   });
-  m.addEventListener('mousemove',e=>{
-    if(!tip.classList.contains('show'))return;
-    tip.style.left=e.clientX+'px';
-    tip.style.top=e.clientY+'px';
-  });
-  m.addEventListener('mouseout',e=>{
+  m.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ')return;
     const c=e.target.closest('.cell');
-    if(c)tip.classList.remove('show');
+    if(!c)return;
+    e.preventDefault();
+    const key=c.dataset.key;
+    if(key)showCellDetail(key);
   });
-  m.addEventListener('mouseleave',()=>tip.classList.remove('show'));
+  const modal=document.getElementById('cellModal');
+  if(modal){
+    modal.addEventListener('click',e=>{
+      if(e.target.id==='cellModal')hideCellDetail();
+    });
+  }
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape')hideCellDetail();
+  });
 }
 
 /* ---- rotating matrix quote ---- */
@@ -2097,7 +2520,7 @@ async function del(i){
   if(q.error)toast('Could not delete: '+q.error.message);
   else{await loadData();renderAll();toast('SESSION DELETED')}
 }
-function exportData(){const b=new Blob([JSON.stringify({version:10,userId:uid(),program,exportedAt:new Date().toISOString(),workouts:programData()},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`fit15-${program}-backup.json`;a.click();toast('BACKUP EXPORTED')}
+function exportData(){const b=new Blob([JSON.stringify({version:11,userId:uid(),program,exportedAt:new Date().toISOString(),workouts:programData()},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`fit15-${program}-backup.json`;a.click();toast('BACKUP EXPORTED')}
 function importData(){toast('Cloud import is disabled for safety.')}
 async function signOut(){await sb.auth.signOut();location.reload()}
 function toggle(id,b){const x=document.getElementById(id),show=x.type==='password';x.type=show?'text':'password';b.textContent=show?'Hide':'Show'}
@@ -2131,7 +2554,7 @@ const AUTH_SHELL=(title,sub,body)=>`
       <span class="auth-corner bl"></span>
       <span class="auth-corner br"></span>
       <div class="auth-scouter">
-        <div class="auth-mark">FIT15<small>Ki Realm // v11</small></div>
+        <div class="auth-mark">FIT15<small>Ki Realm // v12</small></div>
         <div class="auth-live"><i></i> LIVE</div>
       </div>
       <div class="auth-meter">
@@ -2363,11 +2786,9 @@ function initLightning(){
   lightningState.running=!prefersReduced;
   if(lightningState.running)requestAnimationFrame(lightningFrame);
   if(!prefersReduced){
-    /* one deliberate ambient strike roughly every 2 seconds */
     setInterval(()=>{
       if(Math.random()<0.85)thunderStrike({intensity:0.38+Math.random()*0.4});
     },2000);
-    /* rare two-hit combo, every ~11 seconds */
     setInterval(()=>{
       if(Math.random()<0.35){
         thunderStrike({intensity:0.6});
@@ -2486,8 +2907,7 @@ function drawBranches(ctx,branches,width){
 }
 
 /* ============================================================
-   WORLD CANVAS — ki pillars · ribbons · shockwaves · embers
-   PLUS drifting smoke, rolling clouds, ki flames & energy strings
+   WORLD CANVAS — ki pillars, ribbons, flames, strings, smoke, clouds
    ============================================================ */
 function initWorld(){
   const c=document.getElementById('worldCanvas');
@@ -2499,7 +2919,6 @@ function initWorld(){
 
   function spawn(){
     embers=[];
-    /* MORE ki embers — denser, brighter */
     const en=Math.min(180,Math.round(window.innerWidth/9));
     for(let i=0;i<en;i++){
       embers.push({
@@ -2539,7 +2958,6 @@ function initWorld(){
     }
     shocks=[];
 
-    /* ---- SMOKE LAYER — heavy drifting battlefield smoke ---- */
     smokes=[];
     const sn=window.innerWidth<620?5:9;
     for(let i=0;i<sn;i++){
@@ -2557,7 +2975,6 @@ function initWorld(){
       });
     }
 
-    /* ---- CLOUD LAYER — slow rolling clouds across the sky ---- */
     clouds=[];
     const cn=window.innerWidth<620?3:6;
     for(let i=0;i<cn;i++){
@@ -2572,7 +2989,6 @@ function initWorld(){
       });
     }
 
-    /* ---- KI FLAMES — big drifting flame bodies ---- */
     flames=[];
     const fn=window.innerWidth<620?6:14;
     for(let i=0;i<fn;i++){
@@ -2589,7 +3005,6 @@ function initWorld(){
       });
     }
 
-    /* ---- ENERGY STRINGS — vertical ki filaments ---- */
     strings=[];
     const stn=window.innerWidth<620?10:22;
     for(let i=0;i<stn;i++){
@@ -2682,7 +3097,6 @@ function initWorld(){
     }
   }
 
-  /* ---- KI FLAMES — tall flickering bodies of living fire ---- */
   function drawFlames(){
     for(const f of flames){
       f.y+=f.vy;f.x+=f.vx;f.phase+=f.phaseSpeed;
@@ -2694,14 +3108,12 @@ function initWorld(){
         continue;
       }
       const rgb=f.col==='fire'?'255,70,25':(f.col==='gold'?'255,175,40':'70,215,255');
-      /* outer heat bloom */
       let g=ctx.createRadialGradient(f.x,f.y+r*0.4,0,f.x,f.y+r*0.4,r*1.9);
       g.addColorStop(0,`rgba(${rgb},${f.alpha*0.85})`);
       g.addColorStop(.45,`rgba(${rgb},${f.alpha*0.32})`);
       g.addColorStop(1,`rgba(${rgb},0)`);
       ctx.fillStyle=g;
       ctx.beginPath();ctx.arc(f.x,f.y+r*0.4,r*1.9,0,Math.PI*2);ctx.fill();
-      /* inner flame tongue */
       g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,r);
       g.addColorStop(0,`rgba(255,255,240,${Math.min(1,f.alpha*1.6)})`);
       g.addColorStop(.4,`rgba(${rgb},${f.alpha*1.15})`);
@@ -2711,7 +3123,6 @@ function initWorld(){
     }
   }
 
-  /* ---- ENERGY STRINGS — living filaments of ki ---- */
   function drawStrings(){
     for(const s of strings){
       s.y-=s.speed;s.wobble+=s.wobbleSpeed;
@@ -2744,10 +3155,8 @@ function initWorld(){
     t=now||0;
     ctx.clearRect(0,0,w,h);
 
-    /* --- CLOUDS first (highest layer, slow drift) --- */
     drawCloudLayer();
 
-    /* --- RISING KI PILLARS --- */
     for(let i=pillars.length-1;i>=0;i--){
       const p=pillars[i];
       p.y-=p.speed;
@@ -2769,13 +3178,9 @@ function initWorld(){
       ctx.fillRect(p.x-p.w/2,p.y,p.w,h-p.y+40);
     }
 
-    /* --- KI FLAMES --- */
     drawFlames();
-
-    /* --- ENERGY STRINGS --- */
     drawStrings();
 
-    /* --- RIBBONS --- */
     for(const rb of ribbons){
       ctx.beginPath();
       for(let x=-40;x<=w+40;x+=12){
@@ -2795,7 +3200,6 @@ function initWorld(){
       ctx.shadowBlur=0;
     }
 
-    /* --- SHOCKWAVES --- */
     if(Math.random()<0.014)spawnShock();
     for(let i=shocks.length-1;i>=0;i--){
       const s=shocks[i];
@@ -2813,7 +3217,6 @@ function initWorld(){
       ctx.shadowBlur=0;
     }
 
-    /* --- EMBERS --- */
     for(const p of embers){
       p.y+=p.vy;p.w+=0.024;
       p.x+=p.vx+Math.sin(p.w)*0.35;
@@ -2831,7 +3234,6 @@ function initWorld(){
       ctx.beginPath();ctx.arc(p.x,p.y,p.r*0.6,0,Math.PI*2);ctx.fill();
     }
 
-    /* --- SMOKE last (in front of embers for depth) --- */
     drawSmokeLayer();
 
     if(running)requestAnimationFrame(frame);
@@ -2921,7 +3323,7 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
     showAuth();
     initLightning();
     initWorld();
-    initCellTip();
+    initCellInteraction();
     attachRipple();
     setInterval(nextMatrixQuote,7000);
     return;
@@ -2934,7 +3336,7 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
   renderAll();
   initWorld();
   initLightning();
-  initCellTip();
+  initCellInteraction();
   attachParallax();
   attachRipple();
   setInterval(nextMatrixQuote,7000);
