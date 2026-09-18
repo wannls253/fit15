@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050508">
+<meta name="description" content="FIT15 — a focused workout tracking and progression app.">
+<meta name="color-scheme" content="dark">
 <title>FIT15 — Ki Realm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2686,5 +2688,46 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
   if(!prefersReduced)setInterval(powerEvent,15000);
 })();
 </script>
+
+<script>
+/* FIT15 single-file production hardening */
+'use strict';
+(() => {
+  const report = (message, error) => {
+    console.error('[FIT15]', message, error || '');
+    try {
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = message;
+        t.classList.add('show');
+        window.setTimeout(() => t.classList.remove('show'), 3200);
+      }
+    } catch (_) {}
+  };
+
+  window.addEventListener('error', (event) => {
+    console.error('[FIT15] Runtime error:', event.error || event.message);
+  });
+
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('[FIT15] Unhandled promise rejection:', event.reason);
+  });
+
+  window.addEventListener('pagehide', () => {
+    // Release Chart.js instances and animation resources when the page leaves.
+    try {
+      if (window.Chart && typeof Chart.getChart === 'function') {
+        document.querySelectorAll('canvas').forEach((canvas) => {
+          const chart = Chart.getChart(canvas);
+          if (chart) chart.destroy();
+        });
+      }
+    } catch (error) {
+      report('Cleanup warning.', error);
+    }
+  }, { once: true });
+})();
+</script>
+
 </body>
 </html>
