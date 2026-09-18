@@ -4,9 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050508">
-<meta name="description" content="FIT15 — a focused workout tracking and progression app.">
+<meta name="description" content="FIT15 — focused workout tracking, progression, and training history.">
 <meta name="color-scheme" content="dark">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="index,follow">
 <title>FIT15 — Ki Realm</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://ssvwlfmdwjoovgeasacs.supabase.co wss://ssvwlfmdwjoovgeasacs.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
@@ -42,7 +45,11 @@ button{cursor:pointer}
 }
 
 /* ============================================================ BASE */
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scrollbar-gutter:stable}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+*{-webkit-tap-highlight-color:transparent}
 body{
   margin:0;
   background:
@@ -1164,6 +1171,11 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 </style>
 </head>
 <body>
+<noscript>
+  <div style="padding:24px;font-family:system-ui;color:#fff;background:#050508">
+    FIT15 requires JavaScript to authenticate, save workouts, and display your training data.
+  </div>
+</noscript>
 
 <canvas id="worldCanvas" aria-hidden="true"></canvas>
 <div class="lightning" aria-hidden="true"><canvas id="lightningCanvas"></canvas></div>
@@ -1526,7 +1538,7 @@ const BATTLE_RANKS=[
 
 const DAY_OFFSET={MON:0,TUE:1,WED:2,THU:3,FRI:4,SAT:5,SUN:6};
 
-let program='male',currentUser=null,data=[],active='MON',chart=null,mode='sessions';
+let program='male',currentUser=null,data=[],active='MON',chart=null,mode='sessions',powerEventTimer=null;
 let historyLimit=6;
 const expandedHistory=new Set();
 
@@ -1549,20 +1561,33 @@ const activeData=()=>programData().filter(r=>Object.keys(currentPlans()).include
 
 function dateLocal(d=new Date()){const x=new Date(d);return new Date(x.getTime()-x.getTimezoneOffset()*60000).toISOString().slice(0,10)}
 function week(d){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return dateLocal(x)}
-function toast(s){const t=document.getElementById('toast');t.textContent=s;t.className='toast';clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='hidden',2600)}
+function toast(s){
+  const t=document.getElementById('toast');
+  if(!t)return;
+  t.textContent=String(s??'');
+  t.className='toast';
+  clearTimeout(toast.t);
+  toast.t=setTimeout(()=>{t.className='hidden'},2600);
+}
 function loading(b,on,text){if(!b)return;b.disabled=on;b.classList.toggle('loading',on);if(on){b.dataset.old=b.textContent;b.textContent=text}else b.textContent=b.dataset.old||b.textContent}
 function sessions(){const gs=[];for(const r of activeData()){const k=(r.created_at||r.id).slice(0,19);let g=gs.find(x=>x.key===k);if(!g){g={key:k,date:r.created_at||r.id,day:r.workout_day,name:r.workout_name,ex:[]};gs.push(g)}g.ex.push(r)}return gs}
 
 async function loadData(){
   data=[];
-  if(!uid())return;
   const id=uid();
-  const q=await sb.from('workouts')
-    .select('id,userid,workout_date,workout_day,workout_name,exercise,weight,reps,sets,duration,completed,notes,created_at')
-    .eq('userid',id)
-    .order('created_at',{ascending:false});
-  if(q.error){console.error(q.error);toast('Could not load your workouts');return}
-  data=(q.data||[]).filter(r=>r.userid===id);
+  if(!id)return;
+  try{
+    const q=await sb.from('workouts')
+      .select('id,userid,workout_date,workout_day,workout_name,exercise,weight,reps,sets,duration,completed,notes,created_at')
+      .eq('userid',id)
+      .order('created_at',{ascending:false});
+    if(q.error)throw q.error;
+    data=Array.isArray(q.data)?q.data.filter(r=>r&&r.userid===id):[];
+  }catch(error){
+    console.error('[FIT15] Could not load workouts:',error);
+    data=[];
+    toast('Could not load your workouts. Please try again.');
+  }
 }
 
 function setProgram(p){
@@ -1708,7 +1733,8 @@ function loadMoreHistory(){
 
 function initHistoryEvents(){
   const h=document.getElementById('history');
-  if(!h)return;
+  if(!h||h.dataset.eventsBound==='1')return;
+  h.dataset.eventsBound='1';
   h.addEventListener('click',e=>{
     const head=e.target.closest('.history-head');
     if(!head)return;
@@ -2125,25 +2151,49 @@ function renderAll(){
 async function save(){
   if(!uid()){showAuth();return}
   const b=document.getElementById('save'),p=currentPlans()[active];
-  const ex=p.ex.map((e,i)=>({name:e[0],target:e[1],value:document.getElementById('v'+i).value.trim(),sets:document.getElementById('s'+i).value.trim(),done:document.getElementById('d'+i).checked}));
+  if(!p||p.rest){toast('There is no workout to save today.');return}
+  const ex=p.ex.map((e,i)=>({
+    name:e[0],
+    target:e[1],
+    value:(document.getElementById('v'+i)?.value||'').trim(),
+    sets:(document.getElementById('s'+i)?.value||'').trim(),
+    done:Boolean(document.getElementById('d'+i)?.checked)
+  }));
   if(!ex.some(x=>x.done)){toast('Complete at least one exercise first.');return}
   loading(b,true,'SEALING…');
-  const tag=PROGRAM_TAG[program];
-  const rows=ex.filter(x=>x.done).map(x=>{
-    const m=x.target.match(/([0-9.]+)\s*kg/i);
-    return{
-      userid:uid(),workout_date:dateLocal(),workout_day:active,workout_name:p.name,
-      exercise:x.name,weight:m?Number(m[1]):null,
-      reps:x.target.includes('30s')?null:(Number(x.value)||null),
-      sets:x.sets?Number(x.sets):null,
-      duration:x.target.includes('30s')||x.name==='Plank'?x.value:null,
-      completed:true,notes:tag
-    };
-  });
-  const q=await sb.from('workouts').insert(rows);
-  if(q.error){toast('Could not save: '+q.error.message)}
-  else{await loadData();renderAll();toast('SESSION SEALED • '+PROGRAM_LABEL[program].toUpperCase()+' POWER RISING');celebrate();screenShake()}
-  loading(b,false);
+  try{
+    const tag=PROGRAM_TAG[program];
+    const rows=ex.filter(x=>x.done).map(x=>{
+      const m=x.target.match(/([0-9.]+)\s*kg/i);
+      const numericValue=x.value===''?null:Number(x.value);
+      const numericSets=x.sets===''?null:Number(x.sets);
+      return{
+        userid:uid(),
+        workout_date:dateLocal(),
+        workout_day:active,
+        workout_name:p.name,
+        exercise:x.name,
+        weight:m?Number(m[1]):null,
+        reps:x.target.includes('30s')?null:(Number.isFinite(numericValue)?numericValue:null),
+        sets:Number.isFinite(numericSets)?numericSets:null,
+        duration:x.target.includes('30s')||x.name==='Plank'?x.value:null,
+        completed:true,
+        notes:tag
+      };
+    });
+    const q=await sb.from('workouts').insert(rows);
+    if(q.error)throw q.error;
+    await loadData();
+    renderAll();
+    toast('SESSION SEALED • '+PROGRAM_LABEL[program].toUpperCase()+' POWER RISING');
+    celebrate();
+    screenShake();
+  }catch(error){
+    console.error('[FIT15] Save failed:',error);
+    toast('Could not save: '+(error?.message||'Please try again.'));
+  }finally{
+    loading(b,false);
+  }
 }
 function exportData(){
   const b=new Blob([JSON.stringify({version:17,userId:uid(),program,exportedAt:new Date().toISOString(),workouts:programData()},null,2)],{type:'application/json'});
@@ -2611,6 +2661,8 @@ function initWorld(){
    MICRO-INTERACTIONS
    ============================================================ */
 function attachRipple(){
+  if(document.documentElement.dataset.rippleBound==='1')return;
+  document.documentElement.dataset.rippleBound='1';
   document.addEventListener('pointerdown',e=>{
     const el=e.target.closest('.cta,.program-btn,.day');
     if(!el)return;
@@ -2658,76 +2710,74 @@ document.querySelectorAll('.chart-tab').forEach(b=>b.onclick=()=>{
 
 sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
 
+
+/* ============================================================
+   LIFECYCLE / RUNTIME SAFETY
+   ============================================================ */
+function fit15Guard(fn){
+  try{return typeof fn==='function'?fn():undefined}
+  catch(error){
+    console.error('[FIT15] Protected action failed:',error);
+    toast('Something went wrong. Please try again.');
+    return undefined;
+  }
+}
+window.addEventListener('pagehide',()=>{
+  if(powerEventTimer){clearInterval(powerEventTimer);powerEventTimer=null}
+  try{if(chart&&typeof chart.destroy==='function')chart.destroy()}catch(error){console.error('[FIT15] Chart cleanup failed',error)}
+},{once:true});
+
+window.addEventListener('error',event=>{
+  console.error('[FIT15] Runtime error:',event.error||event.message);
+});
+
+window.addEventListener('unhandledrejection',event=>{
+  console.error('[FIT15] Unhandled promise rejection:',event.reason);
+});
+
 /* ============================================================
    BOOT
    ============================================================ */
 (async()=>{
-  shuffleQuotes();
-  const q=await sb.auth.getSession();
   const boot=document.getElementById('boot');
-  if(!q.data.session){
+  try{
+    shuffleQuotes();
+    const q=await sb.auth.getSession();
+    if(!q?.data?.session){
+      if(boot)boot.classList.add('hidden');
+      showAuth();
+      initLightning();
+      initWorld();
+      initHistoryEvents();
+      attachRipple();
+      if(!prefersReduced){
+        clearInterval(powerEventTimer);
+        powerEventTimer=setInterval(()=>fit15Guard(powerEvent),15000);
+      }
+      return;
+    }
+    currentUser=q.data.session.user;
     if(boot)boot.classList.add('hidden');
-    showAuth();
+    document.getElementById('app').classList.remove('hidden');
+    const email=document.getElementById('userEmail');
+    if(email)email.textContent=currentUser.email||'Account';
+    await loadData();
+    renderAll();
     initLightning();
     initWorld();
     initHistoryEvents();
     attachRipple();
-    if(!prefersReduced)setInterval(powerEvent,15000);
-    return;
-  }
-  currentUser=q.data.session.user;
-  if(boot)boot.classList.add('hidden');
-  document.getElementById('app').classList.remove('hidden');
-  document.getElementById('userEmail').textContent=currentUser.email||'Account';
-  await loadData();
-  renderAll();
-  initLightning();
-  initWorld();
-  initHistoryEvents();
-  attachRipple();
-  if(!prefersReduced)setInterval(powerEvent,15000);
-})();
-</script>
-
-<script>
-/* FIT15 single-file production hardening */
-'use strict';
-(() => {
-  const report = (message, error) => {
-    console.error('[FIT15]', message, error || '');
-    try {
-      const t = document.getElementById('toast');
-      if (t) {
-        t.textContent = message;
-        t.classList.add('show');
-        window.setTimeout(() => t.classList.remove('show'), 3200);
-      }
-    } catch (_) {}
-  };
-
-  window.addEventListener('error', (event) => {
-    console.error('[FIT15] Runtime error:', event.error || event.message);
-  });
-
-  window.addEventListener('unhandledrejection', (event) => {
-    console.error('[FIT15] Unhandled promise rejection:', event.reason);
-  });
-
-  window.addEventListener('pagehide', () => {
-    // Release Chart.js instances and animation resources when the page leaves.
-    try {
-      if (window.Chart && typeof Chart.getChart === 'function') {
-        document.querySelectorAll('canvas').forEach((canvas) => {
-          const chart = Chart.getChart(canvas);
-          if (chart) chart.destroy();
-        });
-      }
-    } catch (error) {
-      report('Cleanup warning.', error);
+    if(!prefersReduced){
+      clearInterval(powerEventTimer);
+      powerEventTimer=setInterval(()=>fit15Guard(powerEvent),15000);
     }
-  }, { once: true });
+  }catch(error){
+    console.error('[FIT15] Boot failed:',error);
+    if(boot)boot.classList.add('hidden');
+    showAuth();
+    toast('FIT15 could not finish loading. Please refresh and try again.');
+  }
 })();
 </script>
-
 </body>
 </html>
