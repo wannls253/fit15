@@ -1654,6 +1654,70 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .program-btn:hover,.day:hover{transform:none!important}
   button:active,.program-btn:active,.day:active{transform:scale(.985)!important}
 }
+
+/* ============================================================
+   PEAK UI // JAPANESE ENERGY SYSTEM
+   ============================================================ */
+.brand{order:2;gap:9px;min-width:170px;justify-content:flex-end;text-align:right;line-height:.8}
+.brand-mark{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(255,170,0,.55);background:linear-gradient(145deg,#ff2500,#8a0e04);clip-path:polygon(50% 0,100% 22%,84% 100%,18% 84%,0 28%);font:400 25px var(--font-display);letter-spacing:0;color:#fff;filter:drop-shadow(0 0 18px rgba(255,37,0,.65));transform:rotate(-8deg)}
+.brand-word{font:400 45px/.78 var(--font-display);letter-spacing:4px;background:linear-gradient(180deg,#fff 0%,#fff 42%,#ffb42e 70%,#ff2500 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 5px 24px rgba(255,37,0,.55));transform:skew(-7deg);position:relative}
+.brand-word::after{content:"";position:absolute;left:3px;right:-2px;bottom:-7px;height:2px;background:linear-gradient(90deg,transparent,#ff2500,#ffaa00,#00ccff,transparent);box-shadow:0 0 15px rgba(255,37,0,.8)}
+.brand-word em{font-style:normal;font-size:.72em;letter-spacing:1px;margin-left:2px}
+.brand small{position:absolute;right:0;bottom:-13px;font:900 6px var(--font-mono);letter-spacing:2.8px;color:rgba(255,216,102,.62);transform:skew(-7deg)}
+.brand .pulse-dot{margin-left:2px;width:6px;height:6px}
+.account{order:1;gap:10px}
+.realm-status{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid rgba(255,255,255,.08);border-radius:7px;background:rgba(0,0,0,.35);font:800 7px var(--font-mono);letter-spacing:1.3px;color:var(--text-dim)}
+.realm-status i{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(74,222,128,.9)}
+.realm-status b{color:#c7ffd9;font-weight:800}.realm-status span{opacity:.55}
+.command-deck{display:flex;align-items:center;gap:6px;margin-top:10px;padding:7px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.34));box-shadow:inset 0 1px 0 rgba(255,255,255,.05);overflow:auto;scrollbar-width:none}
+.command-deck::-webkit-scrollbar{display:none}
+.deck-label{flex:0 0 auto;padding:0 10px;color:var(--text-faint);font:900 7px var(--font-mono);letter-spacing:2px}
+.command-deck button{flex:0 0 auto;border:1px solid transparent;background:rgba(255,255,255,.025);color:var(--text-2);border-radius:7px;padding:9px 11px;font:800 7.5px var(--font-body);letter-spacing:1.1px;text-transform:uppercase;transition:.22s ease}
+.command-deck button b{color:var(--vermillion);margin-right:5px;font-family:var(--font-mono)}
+.command-deck button:hover,.command-deck button:focus-visible{border-color:rgba(255,37,0,.35);background:rgba(255,37,0,.08);color:#fff;transform:translateY(-1px)}
+.command-deck button:active{transform:translateY(0) scale(.98)}
+
+/* Sculpted energy flame: sharper silhouette + layered depth */
+#worldCanvas{mix-blend-mode:screen;opacity:.94}
+body::after{background:radial-gradient(ellipse 86% 62% at 50% 44%,transparent 32%,rgba(0,0,0,.68) 100%),linear-gradient(180deg,rgba(0,0,0,.16),transparent 30%,rgba(0,0,0,.2))}
+.energy-flame-layer{position:fixed;inset:auto 0 0;z-index:1;height:min(52vh,520px);pointer-events:none;overflow:hidden;opacity:.8;filter:blur(.1px)}
+.energy-flame-layer::before,.energy-flame-layer::after{content:"";position:absolute;bottom:-12%;left:50%;transform:translateX(-50%);width:130%;height:125%;background:radial-gradient(ellipse at 50% 100%,rgba(255,37,0,.22),transparent 52%);filter:blur(26px)}
+.energy-flame-layer::after{width:75%;background:radial-gradient(ellipse at 50% 100%,rgba(255,170,0,.16),transparent 55%);filter:blur(34px)}
+.energy-flame{position:absolute;bottom:-10%;width:210px;height:470px;opacity:.22;filter:blur(1px);transform-origin:50% 100%;clip-path:polygon(50% 100%,31% 89%,17% 73%,23% 61%,10% 48%,28% 50%,18% 34%,39% 43%,36% 20%,50% 35%,63% 5%,66% 31%,82% 17%,76% 42%,96% 37%,83% 57%,92% 71%,72% 68%,79% 87%);background:linear-gradient(180deg,rgba(255,216,102,.05),rgba(255,170,0,.18) 35%,rgba(255,37,0,.5) 78%,transparent)}
+.energy-flame.f1{left:2%;transform:rotate(-8deg) scale(1.2);animation:flameSurge 5.8s ease-in-out infinite}.energy-flame.f2{left:24%;transform:rotate(5deg) scale(.82);animation:flameSurge 4.7s ease-in-out -.9s infinite}.energy-flame.f3{right:18%;transform:rotate(-4deg) scale(1.05);animation:flameSurge 5.1s ease-in-out -2s infinite}.energy-flame.f4{right:0;transform:rotate(8deg) scale(1.25);animation:flameSurge 6.4s ease-in-out -3s infinite}
+@keyframes flameSurge{0%,100%{transform:translateY(8px) rotate(var(--r,0deg)) scale(.96);opacity:.15}50%{transform:translateY(-20px) rotate(var(--r,0deg)) scale(1.05);opacity:.3}}
+
+/* Auth: cinematic command chamber */
+.authbox{width:min(470px,calc(100vw - 34px));padding:28px 28px 24px!important;background:linear-gradient(150deg,rgba(20,20,28,.94),rgba(5,5,9,.97) 70%)!important;border:1px solid rgba(255,255,255,.13)!important;box-shadow:0 50px 140px rgba(0,0,0,.9),0 0 70px rgba(255,37,0,.13),inset 0 1px 0 rgba(255,255,255,.1)!important;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:18px!important}
+.authbox::before{content:"鍛錬";position:absolute;right:20px;top:74px;font:900 48px var(--font-jp);color:rgba(255,255,255,.035);writing-mode:vertical-rl;letter-spacing:4px;pointer-events:none}
+.auth-scouter{padding-bottom:2px}
+.auth-mark{font-size:58px!important;letter-spacing:4px!important;transform:skew(-6deg);text-shadow:0 8px 30px rgba(255,37,0,.25)}
+.auth-live{font-size:7px!important;padding:8px 10px!important}
+.auth-protocol{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:12px;position:relative;z-index:4}
+.auth-protocol span{display:flex;align-items:center;justify-content:center;gap:5px;min-height:30px;border:1px solid rgba(255,255,255,.065);background:rgba(255,255,255,.018);border-radius:6px;color:var(--text-faint);font:900 6.5px var(--font-mono);letter-spacing:1px}
+.auth-protocol i{font:900 12px var(--font-jp);font-style:normal;color:var(--gold-2);text-shadow:0 0 10px rgba(255,170,0,.4)}
+.auth-kanji-strip{display:flex;justify-content:center;gap:18px;margin:15px 0 4px;color:rgba(255,216,102,.35);font:900 17px var(--font-jp);letter-spacing:2px;position:relative}
+.auth-kanji-strip::before,.auth-kanji-strip::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(255,170,0,.2));align-self:center}.auth-kanji-strip::after{background:linear-gradient(90deg,rgba(255,170,0,.2),transparent)}
+.authbox h2{font-size:35px!important;letter-spacing:1.5px!important;margin-top:15px!important}
+.authbox>p{font-size:11px!important;line-height:1.65!important;color:#8f8a82!important}
+.authbox .label{font-size:8px!important;letter-spacing:2px!important;color:#777167!important}
+.authbox input{min-height:47px!important;background:rgba(0,0,0,.5)!important;border:1px solid rgba(255,255,255,.09)!important;border-radius:9px!important;color:#fff!important;padding:0 14px!important;transition:border-color .2s,box-shadow .2s,background .2s!important}
+.authbox input:focus{border-color:rgba(255,37,0,.65)!important;box-shadow:0 0 0 3px rgba(255,37,0,.08),0 0 30px rgba(255,37,0,.12)!important;background:rgba(255,255,255,.035)!important;outline:none}
+.authbox .cta{min-height:51px!important;letter-spacing:2.5px!important}
+.authbox .authlinks{gap:7px!important;margin-top:9px!important}.authbox .authlinks .secondary{padding:10px 9px!important;font-size:7.5px!important}
+
+/* Focus mode: reduce cognitive load without changing data */
+body.focus-mode .hero,body.focus-mode .stats,body.focus-mode .command-deck,body.focus-mode>.quote,body.focus-mode .section:not(:has(#workoutSection)){ }
+body.focus-mode #workoutSection{margin-top:20px;position:relative;z-index:10}
+body.focus-mode .hero,body.focus-mode .stats,body.focus-mode .command-deck,body.focus-mode #historySection,body.focus-mode #historySection~.section{display:none!important}
+body.focus-mode .section:has(#days),body.focus-mode .section:has(.program-switch),body.focus-mode .section:has(.quote){display:none!important}
+body.focus-mode #workoutSection{grid-template-columns:1fr;max-width:860px;margin-left:auto;margin-right:auto}
+
+@media(max-width:760px){
+  .topbar{height:72px}.account-email{display:none}.realm-status{display:none}.brand{min-width:150px}.brand-word{font-size:40px}.brand-mark{width:30px;height:30px;font-size:22px}.command-deck{margin-top:8px}.deck-label{display:none}.auth-protocol{grid-template-columns:repeat(2,1fr)}.authbox{padding:22px 20px 20px!important}.auth-kanji{font-size:100px!important}
+}
+@media(max-width:430px){.brand small{display:none}.brand-word{font-size:36px}.brand-mark{width:27px;height:27px}.authbox h2{font-size:30px!important}.auth-kanji-strip{gap:10px}.command-deck button{padding:8px 9px}}
+@media(prefers-reduced-motion:reduce){.energy-flame,.energy-flame-layer::before,.energy-flame-layer::after{animation:none!important}.brand::after{animation:none}.brand-word{transform:none}.command-deck button{transition:none}}
 </style>
 
 </head>
@@ -1665,6 +1729,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </noscript>
 
 <canvas id="worldCanvas" aria-hidden="true"></canvas>
+<div class="energy-flame-layer" aria-hidden="true"><i class="energy-flame f1"></i><i class="energy-flame f2"></i><i class="energy-flame f3"></i><i class="energy-flame f4"></i></div>
 <div class="lightning" aria-hidden="true"><canvas id="lightningCanvas"></canvas></div>
 <div id="energyPulse" class="energy-pulse" aria-hidden="true"></div>
 
@@ -1682,10 +1747,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <div id="app" class="app hidden">
   <header class="topbar" aria-label="FIT15 account bar">
-    <div class="brand">FIT<span>15</span><i class="pulse-dot" aria-hidden="true"></i></div>
     <div class="account">
+      <span class="realm-status"><i></i><b>SYNCED</b><span>PRIVATE REALM</span></span>
       <span id="userEmail" class="account-email"></span>
-      <button class="ghost" onclick="signOut()">Sign out</button>
+      <button class="ghost" type="button" onclick="signOut()">Sign out</button>
+    </div>
+    <div class="brand" aria-label="FIT15">
+      <span class="brand-mark" aria-hidden="true">F</span><span class="brand-word">FIT<em>15</em></span><i class="pulse-dot" aria-hidden="true"></i>
+      <small>氣&nbsp; // &nbsp;力</small>
     </div>
   </header>
 
@@ -1711,6 +1780,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     <div class="stat"><strong id="mins">0</strong><span>MINUTES TRAINED</span></div>
     <div class="stat"><strong id="consistency">0%</strong><span>12-WEEK RATE</span></div>
   </section>
+
+  <nav class="command-deck" aria-label="Quick actions">
+    <span class="deck-label">道 // COMMAND</span>
+    <button type="button" onclick="fit15SafeScroll('#workoutSection')"><b>01</b> TODAY'S MISSION</button>
+    <button type="button" onclick="fit15SafeScroll('#historySection')"><b>02</b> CHRONICLE</button>
+    <button type="button" onclick="toggleFocusMode()" id="focusToggle"><b>03</b> FOCUS MODE</button>
+    <button type="button" onclick="exportData()"><b>04</b> EXPORT</button>
+  </nav>
 
   <section class="section">
     <div class="section-head">
@@ -1851,7 +1928,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     </div>
   </section>
 
-  <section class="section">
+  <section id="historySection" class="section">
     <div class="card">
       <div class="section-head">
         <div>
@@ -2719,11 +2796,15 @@ const AUTH_SHELL=(title,sub,body)=>`
       </div>
       <div class="auth-meter">
         <div class="auth-meter-head">
-          <span class="auth-meter-label">Power Charge</span>
+          <span class="auth-meter-label">Power Charge // 氣力</span>
           <span class="auth-meter-value" id="kiCharge">900</span>
         </div>
         <div class="auth-meter-track"><div class="auth-meter-fill" id="kiFill"></div></div>
       </div>
+      <div class="auth-protocol" aria-label="FIT15 security and training protocol">
+        <span><i>守</i> PRIVATE</span><span><i>鍛</i> DISCIPLINE</span><span><i>進</i> PROGRESS</span><span><i>炎</i> ENERGY</span>
+      </div>
+      <div class="auth-kanji-strip" aria-hidden="true"><span>鍛</span><span>心</span><span>力</span><span>道</span><span>炎</span></div>
       <h2>${title}</h2>
       <p>${sub}</p>
       ${body}
@@ -2859,6 +2940,14 @@ function attachKiCharge(){
     fill.style.width=(charge*100).toFixed(1)+'%';
   }
   inputs.forEach(i=>i.addEventListener('input',compute));
+  inputs.forEach(i=>i.addEventListener('keydown',e=>{
+    if(e.key==='Enter' && i.id==='password' && typeof signIn==='function')signIn();
+  }));
+  inputs.forEach(i=>i.addEventListener('keyup',e=>{
+    if(i.type==='password' && e.getModifierState && e.getModifierState('CapsLock')){
+      const m=document.getElementById('authmsg'); if(m)m.textContent='Caps Lock is on.';
+    }
+  }));
   compute();
 }
 
@@ -3025,6 +3114,17 @@ function drawBranches(ctx,branches,width){
   for(const br of branches)drawBoltPath(ctx,br);
   ctx.lineWidth=prev;
 }
+
+/* ============================================================
+   COMMAND DECK — useful quick controls
+   ============================================================ */
+function toggleFocusMode(){
+  const active=document.body.classList.toggle('focus-mode');
+  const b=document.getElementById('focusToggle');
+  if(b)b.innerHTML=`<b>03</b> ${active?'EXIT FOCUS':'FOCUS MODE'}`;
+  try{localStorage.setItem('fit15_focus',active?'1':'0')}catch(e){}
+}
+try{if(localStorage.getItem('fit15_focus')==='1'){document.body.classList.add('focus-mode');}}catch(e){}
 
 /* ============================================================
    POWER EVENT — every 15s: quote + energy pulse + lightning
