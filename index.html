@@ -56,7 +56,7 @@ body{
 #worldCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 #matrixRain{
   position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;
-  opacity:.28;mix-blend-mode:screen;
+  opacity:.30;mix-blend-mode:screen;
   -webkit-mask-image:radial-gradient(ellipse 92% 78% at 50% 42%,#000 20%,transparent 88%);
   mask-image:radial-gradient(ellipse 92% 78% at 50% 42%,#000 20%,transparent 88%);
 }
@@ -100,20 +100,13 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 }
 @keyframes ribbonFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 @keyframes sheen{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
-@keyframes flicker{0%,100%{opacity:.75;transform:translateY(-50%) scale(.9)}50%{opacity:1;transform:translateY(-50%) scale(1.2)}}
 @keyframes kanjiFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
 @keyframes portalSweep{0%{opacity:0;transform:scale(.5)}25%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.9)}}
-@keyframes powerPulse{
-  0%,100%{box-shadow:0 0 30px rgba(255,37,0,.4),0 0 0 1px rgba(255,37,0,.25)}
-  50%{box-shadow:0 0 60px rgba(255,37,0,.75),0 0 0 1px rgba(255,170,0,.4)}
-}
-@keyframes cellCorePulse{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
 @keyframes rankUp{
   0%{opacity:0;transform:scale(.6) rotate(-8deg)}
   40%{opacity:1;transform:scale(1.15) rotate(2deg)}
   100%{opacity:0;transform:scale(1.4) rotate(0)}
 }
-@keyframes energyPulse{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
 
 /* ============================================================ KI WAVE */
 .ki-wave{
@@ -152,7 +145,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 /* ============================================================ MANTRA COLUMNS */
 .mantra{
   position:absolute;top:-10%;bottom:-10%;width:auto;pointer-events:none;z-index:1;
-  opacity:.20;overflow:hidden;
+  opacity:.12;overflow:hidden;
   font-family:var(--font-mantra);font-weight:900;
   writing-mode:vertical-rl;text-orientation:upright;
   letter-spacing:20px;line-height:1.6;
@@ -311,15 +304,15 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 .hero-aura{
   position:absolute;width:900px;height:900px;right:-360px;top:-420px;z-index:0;
   background:conic-gradient(from 0deg,transparent 0deg,rgba(255,37,0,.7) 30deg,transparent 90deg,rgba(255,170,0,.5) 150deg,transparent 210deg,rgba(0,204,255,.5) 270deg,transparent 356deg);
-  filter:blur(90px);opacity:.5;pointer-events:none;animation:spin 40s linear infinite;
+  filter:blur(90px);opacity:.30;pointer-events:none;animation:spin 62s linear infinite;
 }
 .hero-glow{
   position:absolute;width:55%;height:150%;right:-15%;top:-25%;z-index:0;
   background:radial-gradient(circle at 50% 50%,rgba(255,37,0,.3),transparent 62%);
-  filter:blur(28px);pointer-events:none;
+  filter:blur(28px);pointer-events:none;opacity:.7;
 }
 .hero-stripes{
-  position:absolute;left:0;right:0;top:0;height:100%;z-index:1;pointer-events:none;opacity:.18;
+  position:absolute;left:0;right:0;top:0;height:100%;z-index:1;pointer-events:none;opacity:.10;
   background:repeating-linear-gradient(115deg,transparent 0 42px,rgba(255,37,0,.5) 42px 46px,transparent 46px 90px,rgba(255,170,0,.32) 90px 93px,transparent 93px 160px);
   -webkit-mask-image:linear-gradient(90deg,transparent 25%,#000 60%,transparent 100%);
   mask-image:linear-gradient(90deg,transparent 25%,#000 60%,transparent 100%);
@@ -334,12 +327,11 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 }
 .eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--vermillion);box-shadow:0 0 14px rgba(255,37,0,1);animation:pulseDot 1.8s ease-out infinite}
 .hero h1{
-  font:400 clamp(48px,7.5vw,84px)/.85 var(--font-display);
-  text-transform:uppercase;letter-spacing:-.5px;margin:18px 0 12px;
+  font:400 clamp(48px,7.5vw,84px)/.88 var(--font-display);
+  text-transform:uppercase;letter-spacing:-.5px;margin:18px 0 14px;
   text-shadow:0 20px 60px rgba(0,0,0,.75);
 }
 .hero h1 .l1{color:#fff}
-.hero h1 .l2{color:var(--text-dim)}
 .hero h1 em{
   font-style:normal;position:relative;
   background:var(--flame);-webkit-background-clip:text;background-clip:text;
@@ -366,35 +358,35 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 .wk-halo{
   position:absolute;left:50%;top:50%;width:520px;height:520px;
   margin:-260px 0 0 -260px;border-radius:50%;
-  border:1px solid rgba(255,170,0,.28);
+  border:1px solid rgba(255,170,0,.22);
   box-shadow:
-    0 0 60px rgba(255,170,0,.25),
-    inset 0 0 60px rgba(255,170,0,.12);
-  animation:spin 60s linear infinite;
+    0 0 60px rgba(255,170,0,.18),
+    inset 0 0 60px rgba(255,170,0,.08);
+  animation:spin 90s linear infinite;
 }
 .wk-halo::before{
   content:"";position:absolute;inset:22px;border-radius:50%;
-  border:1px dashed rgba(255,216,102,.35);
+  border:1px dashed rgba(255,216,102,.26);
 }
 .wk-halo::after{
   content:"齊天大聖";position:absolute;left:50%;top:-12px;transform:translateX(-50%);
   font:900 10px var(--font-brush);letter-spacing:8px;
-  color:rgba(255,216,102,.65);text-shadow:0 0 16px rgba(255,170,0,.9);
+  color:rgba(255,216,102,.5);text-shadow:0 0 16px rgba(255,170,0,.7);
   white-space:nowrap;
 }
 .wk-staff{
   position:absolute;left:8%;top:-12%;width:3px;height:140%;
   background:linear-gradient(180deg,transparent,rgba(255,170,0,.9) 20%,rgba(255,216,102,1) 50%,rgba(255,170,0,.9) 80%,transparent);
   box-shadow:0 0 22px rgba(255,170,0,.85),0 0 44px rgba(255,37,0,.4);
-  transform:rotate(12deg);opacity:.55;
-  animation:staffGlow 4s ease-in-out infinite;
+  transform:rotate(12deg);opacity:.30;
+  animation:staffGlow 6s ease-in-out infinite;
 }
-.wk-staff.s2{left:auto;right:10%;transform:rotate(-14deg);height:120%;top:-8%;opacity:.38;animation-delay:2s}
-@keyframes staffGlow{0%,100%{opacity:.45;filter:brightness(1)}50%{opacity:.95;filter:brightness(1.4)}}
+.wk-staff.s2{left:auto;right:10%;transform:rotate(-14deg);height:120%;top:-8%;opacity:.20;animation-delay:3s}
+@keyframes staffGlow{0%,100%{opacity:.22;filter:brightness(1)}50%{opacity:.55;filter:brightness(1.25)}}
 .wk-cloud{
   position:absolute;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,216,102,.24),rgba(255,170,0,.08) 45%,transparent 72%);
-  filter:blur(18px);animation:cloudFloat 12s ease-in-out infinite;
+  background:radial-gradient(circle,rgba(255,216,102,.14),rgba(255,170,0,.05) 45%,transparent 72%);
+  filter:blur(18px);animation:cloudFloat 14s ease-in-out infinite;
 }
 .wk-cloud.c1{width:220px;height:110px;left:4%;bottom:8%}
 .wk-cloud.c2{width:320px;height:150px;right:6%;top:10%;animation-delay:3s}
@@ -1156,7 +1148,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 .auth-burst.go.b3{animation-delay:.2s;border-color:rgba(0,204,255,1)}
 @keyframes authBurst{0%{opacity:.95;transform:scale(.6)}100%{opacity:0;transform:scale(38)}}
 
-/* ============================================================ TOAST / FLASH / LIGHTNING / PULSE */
+/* ============================================================ TOAST / FLASH / LIGHTNING */
 .toast{
   position:fixed;right:20px;bottom:20px;z-index:150;
   background:linear-gradient(160deg,rgba(20,20,28,.98),rgba(10,10,16,.99));
@@ -1175,15 +1167,6 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 @keyframes flashBurst{0%{opacity:0}10%{opacity:1}100%{opacity:0}}
 .lightning{position:fixed;inset:0;z-index:138;pointer-events:none;overflow:hidden}
 .lightning canvas{width:100%;height:100%;display:block}
-.energy-pulse{
-  position:fixed;inset:0;pointer-events:none;z-index:130;
-  background:radial-gradient(circle at 50% 50%,
-    rgba(0,204,255,.10),
-    rgba(255,170,0,.06) 40%,
-    transparent 70%);
-  opacity:0;
-}
-.energy-pulse.fire{animation:energyPulse 1.5s ease-out}
 
 /* ============================================================ RESPONSIVE */
 @media(min-width:701px){.days{grid-template-columns:repeat(4,1fr)}}
@@ -1282,7 +1265,6 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 <canvas id="worldCanvas" aria-hidden="true"></canvas>
 <canvas id="matrixRain" aria-hidden="true"></canvas>
 <div class="lightning" aria-hidden="true"><canvas id="lightningCanvas"></canvas></div>
-<div id="energyPulse" class="energy-pulse" aria-hidden="true"></div>
 
 <div id="boot" class="boot">
   <div class="boot-inner">
@@ -1328,8 +1310,8 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
     </div>
 
     <div class="hero-content">
-      <div class="eyebrow"><i></i> 15-MINUTE PROTOCOL // POWER PROGRESSION</div>
-      <h1><span class="l1">All Fruit.</span><br><span class="l2">Train.</span> <em>So Cute.</em></h1>
+      <div class="eyebrow"><i></i> 15-Minute Protocol</div>
+      <h1><span class="l1">All Fruit.</span><br><em>So Cute.</em></h1>
       <p>Fifteen minutes. Measurable progression. Two sealed realms — Koe Koe and Baby — each with its own history, its own power, its own thunder.</p>
       <div class="hero-actions">
         <button class="cta" onclick="document.getElementById('workoutSection').scrollIntoView({behavior:'smooth'})">ENTER TODAY'S MISSION</button>
@@ -1706,63 +1688,95 @@ function kiWave(opts={}){
 }
 
 /* ============================================================
-   MATRIX RAIN — kanji falling vertically
+   MATRIX RAIN — slow, fine-grained kanji drift
    ============================================================ */
 function initMatrixRain(){
   const c=document.getElementById('matrixRain');
   if(!c||!c.getContext)return;
   if(prefersReduced)return;
+
   const ctx=c.getContext('2d');
+  const GLYPHS='氣力火炎雷龍神覇極傳悟空金箍斗雲變齊天大聖猴王心夢幻刃影風魂';
   const isMobile=window.innerWidth<700;
-  const glyphs='氣力火炎雷龍神覇極傳悟空金箍斗雲變齊天大聖猴王心夢幻刃影風魂'.split('');
-  const fontSize=isMobile?15:22;
-  let cols=0,drops=[],w=0,h=0;
+  const FONT=isMobile?9:12;        // smaller glyphs
+  const FPS=30;                    // background render cap
+  const SPEED_MIN=4.2;             // rows / second (slow drift)
+  const SPEED_MAX=7.6;
+
+  let w=0,h=0,cols=0,dpr=1;
+  let pos=[],speed=[],row=[];
 
   function resize(){
-    w=c.width=window.innerWidth;
-    h=c.height=window.innerHeight;
-    cols=Math.floor(w/fontSize);
-    drops=new Array(cols).fill(0).map(()=>Math.random()*(h/fontSize));
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    w=window.innerWidth;
+    h=window.innerHeight;
+    c.width=Math.round(w*dpr);
+    c.height=Math.round(h*dpr);
+    c.style.width=w+'px';
+    c.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.font='900 '+FONT+'px "Shippori Mincho","Noto Serif JP",serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+
+    cols=Math.ceil(w/FONT);
+    pos=new Array(cols);
+    speed=new Array(cols);
+    row=new Array(cols);
+    for(let i=0;i<cols;i++){
+      pos[i]=Math.random()*(h/FONT+12);
+      speed[i]=SPEED_MIN+Math.random()*(SPEED_MAX-SPEED_MIN);
+      row[i]=-1;
+    }
   }
   resize();
   window.addEventListener('resize',resize);
 
   let last=performance.now(),acc=0;
+
   function frame(now){
-    const dt=now-last;last=now;acc+=dt;
-    // trail fade
-    ctx.fillStyle='rgba(5,5,8,0.10)';
+    requestAnimationFrame(frame);
+    acc+=now-last;
+    last=now;
+    if(acc<1000/FPS)return;
+    const dt=Math.min(acc/1000,0.12);
+    acc=0;
+
+    // frame-rate independent trail fade
+    ctx.fillStyle='rgba(5,5,8,'+(2.6*dt).toFixed(3)+')';
     ctx.fillRect(0,0,w,h);
 
-    ctx.font='900 '+fontSize+'px "Shippori Mincho","Noto Serif JP",serif';
-    ctx.textAlign='center';
-
     for(let i=0;i<cols;i++){
-      const x=i*fontSize+fontSize/2;
-      const y=drops[i]*fontSize;
+      pos[i]+=speed[i]*dt;
+      const r=Math.floor(pos[i]);
+      if(r===row[i]){
+        if(pos[i]*FONT>h+FONT*3 && Math.random()>0.94){
+          pos[i]=-1-Math.random()*12;
+          row[i]=-1;
+        }
+        continue;
+      }
+      row[i]=r;
 
-      // dark trail glyph
-      const ch=glyphs[Math.floor(Math.random()*glyphs.length)];
-      const roll=Math.random();
-      let rgb;
-      if(roll<0.62) rgb='255,80,30';          // vermillion
-      else if(roll<0.86) rgb='255,180,40';    // gold
-      else rgb='120,230,255';                 // cyan
-      ctx.fillStyle='rgba('+rgb+','+(0.35+Math.random()*0.35)+')';
-      ctx.fillText(ch,x,y);
+      const py=r*FONT+FONT/2;
+      if(py>-FONT*2 && py<h+FONT*2){
+        const x=i*FONT+FONT/2;
+        const roll=Math.random();
+        const rgb=roll<0.62?'255,80,30':roll<0.88?'255,180,40':'120,230,255';
+        ctx.fillStyle='rgba('+rgb+','+(0.30+Math.random()*0.28).toFixed(3)+')';
+        ctx.fillText(GLYPHS[(Math.random()*GLYPHS.length)|0],x,py);
 
-      // bright white head — one glyph ahead, occasionally
-      if(Math.random()<0.14){
-        ctx.fillStyle='rgba(255,255,242,0.92)';
-        ctx.fillText(glyphs[Math.floor(Math.random()*glyphs.length)],x,y-fontSize*0.05);
+        if(Math.random()<0.06){
+          ctx.fillStyle='rgba(255,255,245,0.85)';
+          ctx.fillText(GLYPHS[(Math.random()*GLYPHS.length)|0],x,py);
+        }
       }
 
-      drops[i]+=0.35+Math.random()*0.55;
-      if(drops[i]*fontSize>h+40 && Math.random()>0.965){
-        drops[i]=-1;
+      if(pos[i]*FONT>h+FONT*3 && Math.random()>0.94){
+        pos[i]=-1-Math.random()*12;
+        row[i]=-1;
       }
     }
-    requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }
@@ -2623,26 +2637,6 @@ function drawBranches(ctx,branches,width){
 }
 
 /* ============================================================
-   POWER EVENT — quote + pulse + lightning + ki wave
-   ============================================================ */
-function powerEvent(){
-  nextQuote();
-  const pulse=document.getElementById('energyPulse');
-  if(pulse&&!prefersReduced){
-    pulse.classList.remove('fire');
-    void pulse.offsetWidth;
-    pulse.classList.add('fire');
-  }
-  thunderStrike({intensity:0.7});
-  kiWave({slow:true});
-  const qb=document.getElementById('quoteBox');
-  if(qb){
-    qb.classList.add('pulse');
-    setTimeout(()=>qb.classList.remove('pulse'),1600);
-  }
-}
-
-/* ============================================================
    WORLD CANVAS
    ============================================================ */
 function initWorld(){
@@ -2806,7 +2800,8 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
     initMatrixRain();
     initHistoryEvents();
     attachRipple();
-    if(!prefersReduced)setInterval(powerEvent,15000);
+    // gentle quote rotation — no screen-wide energy rings
+    if(!prefersReduced)setInterval(nextQuote,24000);
     return;
   }
   currentUser=q.data.session.user;
@@ -2820,7 +2815,7 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
   initMatrixRain();
   initHistoryEvents();
   attachRipple();
-  if(!prefersReduced)setInterval(powerEvent,15000);
+  if(!prefersReduced)setInterval(nextQuote,24000);
 })();
 </script>
 </body>
