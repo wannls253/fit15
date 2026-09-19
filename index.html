@@ -7,7 +7,7 @@
 <title>FIT15 — Ki Realm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&family=Noto+Serif+JP:wght@700;900&family=Shippori+Mincho:wght@700;800;900&family=Yuji+Syuku&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
@@ -36,6 +36,8 @@ button{cursor:pointer}
   --font-body:'Inter',system-ui,sans-serif;
   --font-mono:'JetBrains Mono',ui-monospace,monospace;
   --font-jp:'Noto Serif JP',serif;
+  --font-brush:'Yuji Syuku','Shippori Mincho','Noto Serif JP',serif;
+  --font-mantra:'Shippori Mincho','Noto Serif JP',serif;
   --cut:12px;--r-lg:16px;--r-md:12px;--r-sm:9px;
 }
 
@@ -52,6 +54,12 @@ body{
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden;
 }
 #worldCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#matrixRain{
+  position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;
+  opacity:.28;mix-blend-mode:screen;
+  -webkit-mask-image:radial-gradient(ellipse 92% 78% at 50% 42%,#000 20%,transparent 88%);
+  mask-image:radial-gradient(ellipse 92% 78% at 50% 42%,#000 20%,transparent 88%);
+}
 body::before{
   content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -70,6 +78,7 @@ button:focus-visible,input:focus-visible,.day:focus-visible,.history-head:focus-
 }
 .app{max-width:1240px;margin:auto;padding:14px 22px 80px;position:relative;z-index:3}
 
+/* ============================================================ KEYFRAMES */
 @keyframes shakeScreen{
   0%{transform:translate(0,0)}10%{transform:translate(-4px,2px)}20%{transform:translate(5px,-2px)}
   30%{transform:translate(-5px,-3px)}40%{transform:translate(4px,3px)}50%{transform:translate(-3px,1px)}
@@ -106,6 +115,55 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 }
 @keyframes energyPulse{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
 
+/* ============================================================ KI WAVE */
+.ki-wave{
+  position:fixed;left:50%;top:50%;width:10px;height:10px;
+  border-radius:50%;pointer-events:none;z-index:2;
+  transform:translate(-50%,-50%);
+  border:2px solid rgba(255,170,0,.9);
+  box-shadow:
+    0 0 60px rgba(255,170,0,.65),
+    0 0 140px rgba(255,37,0,.45),
+    inset 0 0 40px rgba(255,170,0,.35);
+  animation:kiWaveAnim 2.4s cubic-bezier(.15,.85,.25,1) forwards;
+}
+.ki-wave.cyan{
+  border-color:rgba(0,204,255,.9);
+  box-shadow:
+    0 0 60px rgba(0,204,255,.6),
+    0 0 140px rgba(122,228,255,.45),
+    inset 0 0 40px rgba(0,204,255,.35);
+}
+.ki-wave.plasma{
+  border-color:rgba(208,37,232,.9);
+  box-shadow:
+    0 0 60px rgba(208,37,232,.6),
+    0 0 140px rgba(255,170,0,.35),
+    inset 0 0 40px rgba(208,37,232,.35);
+}
+.ki-wave.slow{animation-duration:3.6s}
+.ki-wave.fast{animation-duration:1.4s}
+@keyframes kiWaveAnim{
+  0%{width:10px;height:10px;opacity:1;border-width:6px}
+  60%{opacity:.7}
+  100%{width:190vmax;height:190vmax;opacity:0;border-width:1px}
+}
+
+/* ============================================================ MANTRA COLUMNS */
+.mantra{
+  position:absolute;top:-10%;bottom:-10%;width:auto;pointer-events:none;z-index:1;
+  opacity:.20;overflow:hidden;
+  font-family:var(--font-mantra);font-weight:900;
+  writing-mode:vertical-rl;text-orientation:upright;
+  letter-spacing:20px;line-height:1.6;
+  color:rgba(255,216,102,.55);
+  text-shadow:0 0 20px rgba(255,170,0,.7),0 0 40px rgba(255,37,0,.35);
+  filter:blur(.2px);
+}
+.mantra.left{left:4px;animation:mantraScroll 70s linear infinite}
+.mantra.right{right:4px;animation:mantraScroll 88s linear infinite reverse;color:rgba(122,228,255,.42);text-shadow:0 0 20px rgba(0,204,255,.7),0 0 40px rgba(122,228,255,.3)}
+@keyframes mantraScroll{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+
 /* ============================================================ BOOT */
 .boot{
   position:fixed;inset:0;z-index:200;display:grid;place-items:center;
@@ -123,7 +181,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   width:250px;height:250px;animation:spinR 4.8s linear infinite;
   background:conic-gradient(from 90deg,transparent 0deg,rgba(255,170,0,.65) 60deg,transparent 140deg,rgba(0,204,255,.75) 220deg,transparent 300deg,rgba(255,37,0,.65) 340deg,transparent 360deg);
 }
-.boot-kanji{position:absolute;font:900 80px var(--font-jp);pointer-events:none;animation:kanjiFloat 4s ease-in-out infinite}
+.boot-kanji{position:absolute;font:900 80px var(--font-brush);pointer-events:none;animation:kanjiFloat 4s ease-in-out infinite}
 .boot-kanji.left{left:-110px;top:-40px;color:rgba(255,37,0,.4)}
 .boot-kanji.right{right:-110px;bottom:-40px;color:rgba(0,204,255,.4)}
 .boot-mark{font:400 108px/1 var(--font-display);letter-spacing:6px;position:relative;animation:bootPulse 1.9s ease-in-out infinite}
@@ -198,6 +256,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   border-color:var(--vermillion);box-shadow:0 0 30px rgba(255,37,0,.55);transform:translateY(-2px);
 }
 .cta{
+  position:relative;overflow:hidden;
   border:0;border-radius:var(--r-md);padding:20px 32px;
   background:linear-gradient(135deg,#ff2500 0%,#ff5022 35%,#ffaa00 100%);
   background-size:200% 100%;color:#fff;
@@ -207,6 +266,13 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   transition:transform .2s cubic-bezier(.2,.9,.3,1.3),box-shadow .3s ease,filter .3s ease,background-position .8s ease;
   animation:ribbonFlow 4s linear infinite;
 }
+.cta::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);
+  background-size:250% 100%;background-position:-100% 0;
+  mix-blend-mode:overlay;animation:ctaSheen 5.5s linear infinite;
+}
+@keyframes ctaSheen{0%{background-position:-100% 0}100%{background-position:200% 0}}
 .cta:hover{
   transform:translateY(-3px);background-position:100% 50%;
   filter:saturate(1.25) brightness(1.12);
@@ -237,9 +303,9 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   background:
     radial-gradient(ellipse 40% 60% at 15% 60%,rgba(255,37,0,.22),transparent 60%),
     radial-gradient(ellipse 40% 60% at 88% 30%,rgba(0,204,255,.16),transparent 60%),
-    radial-gradient(ellipse 50% 40% at 50% 0%,rgba(255,170,0,.14),transparent 60%);
+    radial-gradient(ellipse 50% 40% at 50% 0%,rgba(255,170,0,.18),transparent 60%);
 }
-.hero-kanji{position:absolute;font:900 200px var(--font-jp);color:rgba(255,37,0,.05);pointer-events:none;z-index:1;line-height:1;user-select:none}
+.hero-kanji{position:absolute;font:900 200px var(--font-brush);color:rgba(255,37,0,.05);pointer-events:none;z-index:1;line-height:1;user-select:none}
 .hero-kanji.k1{right:-40px;top:-40px}
 .hero-kanji.k2{left:-30px;bottom:-60px;color:rgba(0,204,255,.05)}
 .hero-aura{
@@ -279,6 +345,11 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   background:var(--flame);-webkit-background-clip:text;background-clip:text;
   color:transparent;-webkit-text-fill-color:transparent;
   filter:drop-shadow(0 0 40px rgba(255,37,0,.75));
+  animation:h1Glow 3.6s ease-in-out infinite;
+}
+@keyframes h1Glow{
+  0%,100%{filter:drop-shadow(0 0 40px rgba(255,37,0,.75))}
+  50%{filter:drop-shadow(0 0 68px rgba(255,170,0,.95)) drop-shadow(0 0 22px rgba(255,216,102,.6))}
 }
 .hero h1 em::after{
   content:"";position:absolute;left:0;right:0;bottom:.05em;height:.06em;
@@ -289,6 +360,47 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 }
 .hero p{max-width:520px;color:var(--text-2);font-size:13px;line-height:1.7;margin:0 0 20px;opacity:.9}
 .hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+
+/* ============================================================ WUKONG HERO ATMOSPHERE */
+.hero-wk{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}
+.wk-halo{
+  position:absolute;left:50%;top:50%;width:520px;height:520px;
+  margin:-260px 0 0 -260px;border-radius:50%;
+  border:1px solid rgba(255,170,0,.28);
+  box-shadow:
+    0 0 60px rgba(255,170,0,.25),
+    inset 0 0 60px rgba(255,170,0,.12);
+  animation:spin 60s linear infinite;
+}
+.wk-halo::before{
+  content:"";position:absolute;inset:22px;border-radius:50%;
+  border:1px dashed rgba(255,216,102,.35);
+}
+.wk-halo::after{
+  content:"齊天大聖";position:absolute;left:50%;top:-12px;transform:translateX(-50%);
+  font:900 10px var(--font-brush);letter-spacing:8px;
+  color:rgba(255,216,102,.65);text-shadow:0 0 16px rgba(255,170,0,.9);
+  white-space:nowrap;
+}
+.wk-staff{
+  position:absolute;left:8%;top:-12%;width:3px;height:140%;
+  background:linear-gradient(180deg,transparent,rgba(255,170,0,.9) 20%,rgba(255,216,102,1) 50%,rgba(255,170,0,.9) 80%,transparent);
+  box-shadow:0 0 22px rgba(255,170,0,.85),0 0 44px rgba(255,37,0,.4);
+  transform:rotate(12deg);opacity:.55;
+  animation:staffGlow 4s ease-in-out infinite;
+}
+.wk-staff.s2{left:auto;right:10%;transform:rotate(-14deg);height:120%;top:-8%;opacity:.38;animation-delay:2s}
+@keyframes staffGlow{0%,100%{opacity:.45;filter:brightness(1)}50%{opacity:.95;filter:brightness(1.4)}}
+.wk-cloud{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,216,102,.24),rgba(255,170,0,.08) 45%,transparent 72%);
+  filter:blur(18px);animation:cloudFloat 12s ease-in-out infinite;
+}
+.wk-cloud.c1{width:220px;height:110px;left:4%;bottom:8%}
+.wk-cloud.c2{width:320px;height:150px;right:6%;top:10%;animation-delay:3s}
+.wk-cloud.c3{width:160px;height:90px;left:44%;bottom:2%;animation-delay:6s}
+.wk-cloud.c4{width:130px;height:70px;left:58%;top:18%;animation-delay:1.5s}
+@keyframes cloudFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(16px,-14px)}}
 
 /* ============================================================ STATS */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 0}
@@ -393,7 +505,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.16),rgba(255,255,255,.02));
 }
 .portal-divider span{
-  position:relative;z-index:1;font:900 22px var(--font-jp);
+  position:relative;z-index:1;font:900 22px var(--font-brush);
   background:linear-gradient(135deg,#ff2500,#ffaa00 50%,#00ccff);
   -webkit-background-clip:text;background-clip:text;
   color:transparent;-webkit-text-fill-color:transparent;
@@ -529,7 +641,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 .check:checked::after{content:"";width:8px;height:15px;border:solid #1a0500;border-width:0 3.5px 3.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
 .save{width:100%;margin-top:24px}
 
-/* ============================================================ ANALYTICS CARD — professional chart */
+/* ============================================================ ANALYTICS */
 .analytics-card{padding:24px 22px 20px}
 .analytics-head{margin-bottom:16px}
 .chart-tabs{
@@ -630,7 +742,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   display:inline-block;margin-right:6px;
 }
 
-/* ============================================================ MATRIX — visual only, compressed */
+/* ============================================================ MATRIX */
 .matrix-wrap{position:relative;margin:12px auto 0;max-width:480px}
 .matrix{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}
 .cell{
@@ -667,7 +779,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 }
 .cell[data-l="3"] .cell-ring{position:absolute;inset:22%;border-radius:50%;border:1px solid rgba(255,190,90,.75);box-shadow:0 0 10px rgba(255,170,0,.6)}
 .cell[data-l="3"] .cell-kanji{
-  position:absolute;font:900 9px var(--font-jp);
+  position:absolute;font:900 9px var(--font-brush);
   color:rgba(255,240,200,.85);text-shadow:0 0 8px rgba(255,170,0,.9);
   transform:translateY(-9px);
 }
@@ -687,7 +799,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   box-shadow:0 0 14px rgba(255,200,90,.85),inset 0 0 8px rgba(255,200,90,.5);
 }
 .cell[data-l="4"] .cell-kanji{
-  position:absolute;font:900 11px var(--font-jp);color:#fff;
+  position:absolute;font:900 11px var(--font-brush);color:#fff;
   text-shadow:0 0 10px rgba(255,220,140,1),0 0 18px rgba(255,120,40,.9);
   transform:translateY(-12px);
 }
@@ -836,7 +948,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 }
 .quote::before{
   content:"力";position:absolute;right:-40px;top:-70px;
-  font:900 220px var(--font-jp);color:rgba(255,37,0,.06);
+  font:900 220px var(--font-brush);color:rgba(255,37,0,.06);
   pointer-events:none;line-height:1;
   transition:color .5s ease;
 }
@@ -906,7 +1018,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   animation:rankUp 2.4s cubic-bezier(.2,.9,.3,1) forwards;
 }
 .rank-up-kanji{
-  font:900 100px/1 var(--font-jp);
+  font:900 100px/1 var(--font-brush);
   background:linear-gradient(135deg,#ff2500,#ffaa00,#00ccff);
   -webkit-background-clip:text;background-clip:text;
   color:transparent;-webkit-text-fill-color:transparent;
@@ -915,7 +1027,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 .rank-up-name{margin-top:12px;font:400 42px/1 var(--font-display);letter-spacing:7px;color:#fff;text-shadow:0 0 40px rgba(255,37,0,.95),0 0 80px rgba(255,170,0,.6)}
 .rank-up-sub{margin-top:6px;font:800 10px var(--font-mono);letter-spacing:3.6px;color:var(--gold);text-transform:uppercase}
 
-/* ============================================================ EXPORT BUTTONS */
+/* ============================================================ ACTIONS */
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
 
 /* ============================================================ AUTH */
@@ -936,7 +1048,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 .auth-lines .p1{stroke:rgba(255,37,0,.75)}
 .auth-lines .p2{stroke:rgba(255,170,0,.65);animation-delay:1.5s}
 .auth-lines .p3{stroke:rgba(0,204,255,.75);animation-delay:3s}
-.auth-kanji{position:absolute;font:900 160px var(--font-jp);pointer-events:none;z-index:1;line-height:1;user-select:none}
+.auth-kanji{position:absolute;font:900 160px var(--font-brush);pointer-events:none;z-index:1;line-height:1;user-select:none}
 .auth-kanji.kk1{left:6%;top:14%;animation:kanjiFloat 8s ease-in-out infinite;color:rgba(255,37,0,.09)}
 .auth-kanji.kk2{right:6%;bottom:14%;animation:kanjiFloat 9s ease-in-out infinite reverse;color:rgba(0,204,255,.08)}
 .auth-ring{position:absolute;left:50%;top:50%;pointer-events:none;z-index:2;border-radius:50%}
@@ -1090,6 +1202,9 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   .authbox{animation:authIn .4s ease-out;padding:32px 22px 28px;border-radius:18px}
   .auth-mark{font-size:52px}
   .authbox h2{font-size:38px}
+  .mantra{display:none}
+  .wk-halo{width:360px;height:360px;margin:-180px 0 0 -180px}
+  .wk-halo::after{font-size:8px;letter-spacing:5px}
 }
 @media(max-width:620px){
   .app{padding:8px 12px 56px}
@@ -1158,12 +1273,14 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
     animation-duration:.001ms!important;animation-iteration-count:1!important;
     transition-duration:.001ms!important;scroll-behavior:auto!important;
   }
+  #matrixRain{display:none}
 }
 </style>
 </head>
 <body>
 
 <canvas id="worldCanvas" aria-hidden="true"></canvas>
+<canvas id="matrixRain" aria-hidden="true"></canvas>
 <div class="lightning" aria-hidden="true"><canvas id="lightningCanvas"></canvas></div>
 <div id="energyPulse" class="energy-pulse" aria-hidden="true"></div>
 
@@ -1194,6 +1311,22 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
     <div class="hero-aura" aria-hidden="true"></div>
     <div class="hero-glow" aria-hidden="true"></div>
     <div class="hero-stripes" aria-hidden="true"></div>
+
+    <!-- Mantra columns -->
+    <div class="mantra left" aria-hidden="true">氣 · 力 · 火 · 炎 · 雷 · 龍 · 神 · 覇 · 極 · 傳 · 悟 · 空 · 金 · 箍 · 斗 · 雲 · 變 · 齊 · 天 · 大 · 聖 · 猴 · 王 · 心 · 夢 · 幻 · 刃 · 影 · 風 · 魂 · 氣 · 力 · 火 · 炎 · 雷 · 龍 · 神 · 覇 · 極 · 傳 · 悟 · 空 · 金 · 箍 · 斗 · 雲 · 變 · 齊 · 天 · 大 · 聖 · 猴 · 王 · 心 · 夢 · 幻 · 刃 · 影 · 風 · 魂</div>
+    <div class="mantra right" aria-hidden="true">力 · 氣 · 炎 · 火 · 龍 · 雷 · 神 · 極 · 覇 · 空 · 悟 · 傳 · 雲 · 斗 · 箍 · 金 · 聖 · 大 · 天 · 齊 · 變 · 王 · 猴 · 幻 · 夢 · 心 · 魂 · 風 · 影 · 刃 · 力 · 氣 · 炎 · 火 · 龍 · 雷 · 神 · 極 · 覇 · 空 · 悟 · 傳 · 雲 · 斗 · 箍 · 金 · 聖 · 大 · 天 · 齊 · 變 · 王 · 猴 · 幻 · 夢 · 心 · 魂 · 風 · 影 · 刃</div>
+
+    <!-- Wukong atmosphere -->
+    <div class="hero-wk" aria-hidden="true">
+      <div class="wk-staff"></div>
+      <div class="wk-staff s2"></div>
+      <div class="wk-halo"></div>
+      <div class="wk-cloud c1"></div>
+      <div class="wk-cloud c2"></div>
+      <div class="wk-cloud c3"></div>
+      <div class="wk-cloud c4"></div>
+    </div>
+
     <div class="hero-content">
       <div class="eyebrow"><i></i> 15-MINUTE PROTOCOL // POWER PROGRESSION</div>
       <h1><span class="l1">All Fruit.</span><br><span class="l2">Train.</span> <em>So Cute.</em></h1>
@@ -1251,9 +1384,6 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
     <div id="days" class="days"></div>
   </section>
 
-  <!-- ============================================================
-       WORKOUT + ANALYTICS
-       ============================================================ -->
   <section id="workoutSection" class="section grid">
     <div id="workout"></div>
 
@@ -1279,22 +1409,10 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
       </div>
 
       <div class="chart-stats">
-        <div class="chart-stat">
-          <span class="chart-stat-label">Total</span>
-          <span class="chart-stat-value" id="csTotal">0</span>
-        </div>
-        <div class="chart-stat">
-          <span class="chart-stat-label">Weekly Avg</span>
-          <span class="chart-stat-value" id="csAvg">0</span>
-        </div>
-        <div class="chart-stat">
-          <span class="chart-stat-label">Peak Week</span>
-          <span class="chart-stat-value" id="csPeak">0</span>
-        </div>
-        <div class="chart-stat">
-          <span class="chart-stat-label">Trend</span>
-          <span class="chart-stat-value" id="csTrend">—</span>
-        </div>
+        <div class="chart-stat"><span class="chart-stat-label">Total</span><span class="chart-stat-value" id="csTotal">0</span></div>
+        <div class="chart-stat"><span class="chart-stat-label">Weekly Avg</span><span class="chart-stat-value" id="csAvg">0</span></div>
+        <div class="chart-stat"><span class="chart-stat-label">Peak Week</span><span class="chart-stat-value" id="csPeak">0</span></div>
+        <div class="chart-stat"><span class="chart-stat-label">Trend</span><span class="chart-stat-value" id="csTrend">—</span></div>
       </div>
 
       <div class="chartbox">
@@ -1398,7 +1516,7 @@ const plans={
 };
 
 /* ============================================================
-   QUOTES — full pool, shuffled at load for mixed themes
+   QUOTES — Wukong / Slayer / Saiyan / Iron Doctrine
    ============================================================ */
 const QUOTES=[
   /* HARD MODE / WAR DOCTRINE */
@@ -1478,7 +1596,24 @@ const QUOTES=[
   {text:"The strongest warriors are forged in the heat of endless war.",author:"SAIYAN CODE"},
   {text:"Fight like the next opponent is watching.",author:"SAIYAN CODE"},
 
-  /* IRON DOCTRINE / STRONG MESSAGES */
+  /* SUN WUKONG / 齊天大聖 */
+  {text:"I am the Great Sage, Equal of Heaven. My training has no ceiling.",author:"齊天大聖",hard:true},
+  {text:"Seventy-two transformations begin with one decision.",author:"齊天大聖"},
+  {text:"The staff obeys only the disciplined. Swing with purpose.",author:"齊天大聖"},
+  {text:"Cloud somersault. No limit to the distance you can cover.",author:"齊天大聖"},
+  {text:"Break the heavenly gates. Nothing is sealed to the relentless.",author:"齊天大聖",hard:true},
+  {text:"The Monkey King's power came from patience in the fire.",author:"齊天大聖",hard:true},
+  {text:"Steel under a golden headband. Focus the fury.",author:"齊天大聖"},
+  {text:"What the mountain could not hold, your will can move.",author:"齊天大聖"},
+  {text:"Every sunrise is a chance to ascend higher.",author:"齊天大聖"},
+  {text:"The Pilgrim's road is long. So is yours. Walk it.",author:"齊天大聖"},
+  {text:"Ten thousand years of training forged one legend.",author:"齊天大聖",hard:true},
+  {text:"Become what heaven said was impossible.",author:"齊天大聖",hard:true},
+  {text:"Rebel against your limits. Heaven is not a wall.",author:"齊天大聖",hard:true},
+  {text:"Somersault through the sky. Ground yourself in the work.",author:"齊天大聖"},
+  {text:"The staff is weightless to the one who never drops it.",author:"齊天大聖"},
+
+  /* IRON DOCTRINE */
   {text:"The body achieves what the mind believes.",author:"IRON DOCTRINE"},
   {text:"Fall seven times. Stand up eight.",author:"IRON DOCTRINE"},
   {text:"The fire you feel today is the strength you carry tomorrow.",author:"IRON DOCTRINE"},
@@ -1498,17 +1633,17 @@ const QUOTES=[
    ============================================================ */
 const WEEK_RANKS=[
   {name:'AWAKENING',       kanji:'覚', tier:1},
+  {name:'STONE BORN',      kanji:'石', tier:1},
   {name:'APPRENTICE',      kanji:'弟', tier:1},
-  {name:'FLAMEBORN',       kanji:'炎', tier:1},
-  {name:'SHADOW RUNNER',   kanji:'影', tier:2},
-  {name:'BATTLE ADEPT',    kanji:'戦', tier:2},
-  {name:'STORM WARRIOR',   kanji:'嵐', tier:2},
-  {name:'SUPER ASCENDANT', kanji:'昇', tier:3},
+  {name:'FLAMEBORN',       kanji:'炎', tier:2},
+  {name:'STORM RUNNER',    kanji:'雲', tier:2},
+  {name:'BATTLE ADEPT',    kanji:'戰', tier:2},
+  {name:'GOLDEN PILGRIM',  kanji:'金', tier:3},
   {name:'DRAGON FORCE',    kanji:'龍', tier:3},
-  {name:'ELITE VANGUARD',  kanji:'精', tier:3},
+  {name:'SUPER ASCENDANT', kanji:'昇', tier:3},
   {name:'HEAVEN BREAKER',  kanji:'天', tier:4},
-  {name:'LIMIT BREAKER',   kanji:'極', tier:4},
-  {name:'ETERNAL LEGEND',  kanji:'伝', tier:5}
+  {name:'GREAT SAGE',      kanji:'聖', tier:4},
+  {name:'ETERNAL LEGEND',  kanji:'傳', tier:5}
 ];
 
 const BATTLE_RANKS=[
@@ -1517,8 +1652,8 @@ const BATTLE_RANKS=[
   {p:0.15,name:'FLAME WARRIOR', kanji:'炎', line:'Your fire burns steady. Enemies count your steps.'},
   {p:0.28,name:'THUNDER SLAYER',kanji:'雷', line:'The storm answers when you move. Keep cutting.'},
   {p:0.42,name:'HASHIRA',       kanji:'柱', line:'A pillar of the realm. Your discipline is a blade.'},
-  {p:0.58,name:'SAIYAN',        kanji:'悟', line:'Limits shatter on contact. Power is now default.'},
-  {p:0.75,name:'HEAVEN BREAKER',kanji:'覇', line:'The heavens tremble. You have become the battle.'},
+  {p:0.58,name:'GOLDEN PILGRIM',kanji:'金', line:'The staff is light. The road bends to your will.'},
+  {p:0.75,name:'GREAT SAGE',    kanji:'聖', line:'齊天大聖 — Equal of Heaven. Limits are a memory.'},
   {p:0.90,name:'DIVINE',        kanji:'神', line:'Gods bleed where you train. Absolute. Unbroken.'}
 ];
 
@@ -1528,7 +1663,6 @@ let program='male',currentUser=null,data=[],active='MON',chart=null,mode='sessio
 let historyLimit=6;
 const expandedHistory=new Set();
 
-/* Quote shuffle state — shuffled once, re-shuffled when cycle completes */
 let shuffledQuotes=[];
 let shuffledIndex=0;
 
@@ -1551,6 +1685,91 @@ function toast(s){const t=document.getElementById('toast');t.textContent=s;t.cla
 function loading(b,on,text){if(!b)return;b.disabled=on;b.classList.toggle('loading',on);if(on){b.dataset.old=b.textContent;b.textContent=text}else b.textContent=b.dataset.old||b.textContent}
 function sessions(){const gs=[];for(const r of activeData()){const k=(r.created_at||r.id).slice(0,19);let g=gs.find(x=>x.key===k);if(!g){g={key:k,date:r.created_at||r.id,day:r.workout_day,name:r.workout_name,ex:[]};gs.push(g)}g.ex.push(r)}return gs}
 
+/* ============================================================
+   KI WAVE — triggered globally
+   ============================================================ */
+function kiWave(opts={}){
+  if(prefersReduced) return;
+  const el=document.createElement('div');
+  el.className='ki-wave';
+  if(opts.cyan) el.classList.add('cyan');
+  if(opts.plasma) el.classList.add('plasma');
+  if(opts.slow) el.classList.add('slow');
+  if(opts.fast) el.classList.add('fast');
+  if(opts.x!=null && opts.y!=null){
+    el.style.left=opts.x+'px';
+    el.style.top=opts.y+'px';
+    el.style.transform='translate(-50%,-50%)';
+  }
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),4200);
+}
+
+/* ============================================================
+   MATRIX RAIN — kanji falling vertically
+   ============================================================ */
+function initMatrixRain(){
+  const c=document.getElementById('matrixRain');
+  if(!c||!c.getContext)return;
+  if(prefersReduced)return;
+  const ctx=c.getContext('2d');
+  const isMobile=window.innerWidth<700;
+  const glyphs='氣力火炎雷龍神覇極傳悟空金箍斗雲變齊天大聖猴王心夢幻刃影風魂'.split('');
+  const fontSize=isMobile?15:22;
+  let cols=0,drops=[],w=0,h=0;
+
+  function resize(){
+    w=c.width=window.innerWidth;
+    h=c.height=window.innerHeight;
+    cols=Math.floor(w/fontSize);
+    drops=new Array(cols).fill(0).map(()=>Math.random()*(h/fontSize));
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  let last=performance.now(),acc=0;
+  function frame(now){
+    const dt=now-last;last=now;acc+=dt;
+    // trail fade
+    ctx.fillStyle='rgba(5,5,8,0.10)';
+    ctx.fillRect(0,0,w,h);
+
+    ctx.font='900 '+fontSize+'px "Shippori Mincho","Noto Serif JP",serif';
+    ctx.textAlign='center';
+
+    for(let i=0;i<cols;i++){
+      const x=i*fontSize+fontSize/2;
+      const y=drops[i]*fontSize;
+
+      // dark trail glyph
+      const ch=glyphs[Math.floor(Math.random()*glyphs.length)];
+      const roll=Math.random();
+      let rgb;
+      if(roll<0.62) rgb='255,80,30';          // vermillion
+      else if(roll<0.86) rgb='255,180,40';    // gold
+      else rgb='120,230,255';                 // cyan
+      ctx.fillStyle='rgba('+rgb+','+(0.35+Math.random()*0.35)+')';
+      ctx.fillText(ch,x,y);
+
+      // bright white head — one glyph ahead, occasionally
+      if(Math.random()<0.14){
+        ctx.fillStyle='rgba(255,255,242,0.92)';
+        ctx.fillText(glyphs[Math.floor(Math.random()*glyphs.length)],x,y-fontSize*0.05);
+      }
+
+      drops[i]+=0.35+Math.random()*0.55;
+      if(drops[i]*fontSize>h+40 && Math.random()>0.965){
+        drops[i]=-1;
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ============================================================
+   DATA
+   ============================================================ */
 async function loadData(){
   data=[];
   if(!uid())return;
@@ -1572,6 +1791,7 @@ function setProgram(p){
   document.getElementById('femaleBtn').classList.toggle('active',p==='female');
   portalSweep(p);
   thunderStrike({intensity:0.7});
+  kiWave({cyan:p==='female'});
   renderAll();
 }
 
@@ -1588,6 +1808,9 @@ function portalSweep(target){
   setTimeout(()=>sweep.remove(),1100);
 }
 
+/* ============================================================
+   RENDER
+   ============================================================ */
 function renderDays(){
   const keys=Object.keys(currentPlans());
   document.getElementById('days').innerHTML=keys.map(k=>{
@@ -1615,6 +1838,11 @@ function updateProgress(){
   if(pct)pct.textContent=p+'%';
   const card=document.getElementById('workoutCard');
   if(card)card.classList.toggle('maxed',p===100);
+  if(p===100 && !card?.dataset.hit){
+    if(card)card.dataset.hit='1';
+    kiWave({fast:true});
+    setTimeout(()=>kiWave({slow:true,plasma:true}),200);
+  }
 }
 
 function renderStats(){
@@ -1630,7 +1858,7 @@ function renderStats(){
 }
 
 /* ============================================================
-   WORKOUT HISTORY
+   HISTORY
    ============================================================ */
 function historyCardHTML(s){
   const d=new Date(s.date);
@@ -1821,13 +2049,9 @@ function renderMatrix(){
 }
 
 /* ============================================================
-   CHART — professional analytics
+   CHART
    ============================================================ */
-function getWeekAxisLabels(){
-  const arr=[];
-  for(let i=0;i<12;i++) arr.push('W'+(i+1));
-  return arr;
-}
+function getWeekAxisLabels(){const arr=[];for(let i=0;i<12;i++)arr.push('W'+(i+1));return arr;}
 
 function chartData(){
   const ws=[...Array(12)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-(11-i)*7);return week(d)});
@@ -1840,29 +2064,7 @@ function chartData(){
       const reps=d.filter(r=>week(r.created_at||r.workout_date)===w).reduce((a,r)=>a+(Number(r.reps)||0),0);
       return reps;
     });
-    return {
-      labels,
-      datasets:[{
-        label:'Volume',
-        data,
-        borderColor:'#ff5022',
-        backgroundColor:'rgba(255,80,34,.16)',
-        borderWidth:3,
-        fill:true,
-        tension:.35,
-        pointRadius:data.map(v=>v>0?4:0),
-        pointHoverRadius:6,
-        pointBackgroundColor:'#ff5022',
-        pointBorderColor:'#050508',
-        pointBorderWidth:2,
-        pointHoverBackgroundColor:'#fff',
-        pointHoverBorderColor:'#ff5022',
-        spanGaps:true
-      }],
-      unit:'reps',
-      metricLabel:'total reps logged',
-      hasAnyData
-    };
+    return {labels,datasets:[{label:'Volume',data,borderColor:'#ff5022',backgroundColor:'rgba(255,80,34,.16)',borderWidth:3,fill:true,tension:.35,pointRadius:data.map(v=>v>0?4:0),pointHoverRadius:6,pointBackgroundColor:'#ff5022',pointBorderColor:'#050508',pointBorderWidth:2,pointHoverBackgroundColor:'#fff',pointHoverBorderColor:'#ff5022',spanGaps:true}],unit:'reps',metricLabel:'total reps logged',hasAnyData};
   }
   if(mode==='exercise'){
     const ex=d[0]?.exercise||(currentPlans()[active]?.ex?.[0]?.[0]||'Squat');
@@ -1870,54 +2072,10 @@ function chartData(){
       const rs=d.filter(r=>r.exercise===ex&&week(r.created_at||r.workout_date)===w);
       return rs.length?Math.max(...rs.map(r=>Number(r.reps)||Number(r.weight)||0)):null;
     });
-    return {
-      labels,
-      datasets:[{
-        label:ex,
-        data,
-        borderColor:'#ffaa00',
-        backgroundColor:'rgba(255,170,0,.14)',
-        borderWidth:3,
-        fill:true,
-        tension:.35,
-        pointRadius:data.map(v=>v!==null?4:0),
-        pointHoverRadius:6,
-        pointBackgroundColor:'#ffaa00',
-        pointBorderColor:'#050508',
-        pointBorderWidth:2,
-        pointHoverBackgroundColor:'#fff',
-        pointHoverBorderColor:'#ffaa00',
-        spanGaps:true
-      }],
-      unit:'max reps',
-      metricLabel:`peak output · ${ex}`,
-      hasAnyData
-    };
+    return {labels,datasets:[{label:ex,data,borderColor:'#ffaa00',backgroundColor:'rgba(255,170,0,.14)',borderWidth:3,fill:true,tension:.35,pointRadius:data.map(v=>v!==null?4:0),pointHoverRadius:6,pointBackgroundColor:'#ffaa00',pointBorderColor:'#050508',pointBorderWidth:2,pointHoverBackgroundColor:'#fff',pointHoverBorderColor:'#ffaa00',spanGaps:true}],unit:'max reps',metricLabel:`peak output · ${ex}`,hasAnyData};
   }
   const data=ws.map(w=>s.filter(x=>week(x.date)===w).length);
-  return {
-    labels,
-    datasets:[{
-      label:'Sessions',
-      data,
-      borderColor:'#ff2500',
-      backgroundColor:'rgba(255,37,0,.2)',
-      borderWidth:3,
-      fill:true,
-      tension:.35,
-      pointRadius:data.map(v=>v>0?4:0),
-      pointHoverRadius:6,
-      pointBackgroundColor:'#ff2500',
-      pointBorderColor:'#050508',
-      pointBorderWidth:2,
-      pointHoverBackgroundColor:'#fff',
-      pointHoverBorderColor:'#ff2500',
-      spanGaps:true
-    }],
-    unit:'sessions',
-    metricLabel:'sessions logged per week',
-    hasAnyData
-  };
+  return {labels,datasets:[{label:'Sessions',data,borderColor:'#ff2500',backgroundColor:'rgba(255,37,0,.2)',borderWidth:3,fill:true,tension:.35,pointRadius:data.map(v=>v>0?4:0),pointHoverRadius:6,pointBackgroundColor:'#ff2500',pointBorderColor:'#050508',pointBorderWidth:2,pointHoverBackgroundColor:'#fff',pointHoverBorderColor:'#ff2500',spanGaps:true}],unit:'sessions',metricLabel:'sessions logged per week',hasAnyData};
 }
 
 function computeChartSummary(data){
@@ -1926,7 +2084,6 @@ function computeChartSummary(data){
   const avg=valid.length?total/valid.length:0;
   const peak=valid.length?Math.max(...valid):0;
 
-  /* trend: compare last 4 weeks vs previous 4 weeks */
   const recent=data.slice(-4).filter(v=>v!==null&&v!==undefined);
   const previous=data.slice(-8,-4).filter(v=>v!==null&&v!==undefined);
   const recentSum=recent.reduce((a,b)=>a+b,0);
@@ -1959,7 +2116,6 @@ function renderChart(){
   const cfg=chartData();
   const summary=computeChartSummary(cfg.datasets[0].data);
 
-  /* update stats */
   const totalEl=document.getElementById('csTotal');
   const avgEl=document.getElementById('csAvg');
   const peakEl=document.getElementById('csPeak');
@@ -1974,7 +2130,6 @@ function renderChart(){
     trendEl.style.filter='';
   }
 
-  /* update subtitle + foot */
   const sub=document.getElementById('chartSub');
   if(sub)sub.textContent=`12-week trend · ${cfg.metricLabel}`;
   const foot=document.getElementById('chartFootRight');
@@ -1983,7 +2138,6 @@ function renderChart(){
     else foot.textContent=`${summary.weeksWithData} ACTIVE ${summary.weeksWithData===1?'WEEK':'WEEKS'} OF 12`;
   }
 
-  /* empty state */
   if(!cfg.hasAnyData){
     if(empty)empty.classList.remove('hidden');
     c.style.display='none';
@@ -2034,23 +2188,12 @@ function renderChart(){
       scales:{
         x:{
           grid:{display:false,drawBorder:false},
-          ticks:{
-            color:'#8a8373',
-            font:{size:10,family:'JetBrains Mono',weight:'600'},
-            padding:6,
-            maxRotation:0
-          }
+          ticks:{color:'#8a8373',font:{size:10,family:'JetBrains Mono',weight:'600'},padding:6,maxRotation:0}
         },
         y:{
           beginAtZero:true,
           grid:{color:'rgba(255,255,255,.055)',drawBorder:false},
-          ticks:{
-            color:'#8a8373',
-            precision:0,
-            font:{size:10,family:'JetBrains Mono'},
-            padding:8,
-            callback:(v)=>v>=1000?(v/1000).toFixed(1)+'k':v
-          }
+          ticks:{color:'#8a8373',precision:0,font:{size:10,family:'JetBrains Mono'},padding:8,callback:(v)=>v>=1000?(v/1000).toFixed(1)+'k':v}
         }
       }
     }
@@ -2058,7 +2201,7 @@ function renderChart(){
 }
 
 /* ============================================================
-   QUOTE — shuffled rotation, mixed themes
+   QUOTE
    ============================================================ */
 function shuffleQuotes(){
   shuffledQuotes=[...QUOTES];
@@ -2068,10 +2211,7 @@ function shuffleQuotes(){
   }
   shuffledIndex=0;
 }
-
-function ensureShuffled(){
-  if(shuffledQuotes.length===0) shuffleQuotes();
-}
+function ensureShuffled(){if(shuffledQuotes.length===0)shuffleQuotes();}
 
 function renderQuote(animate){
   ensureShuffled();
@@ -2092,18 +2232,13 @@ function renderQuote(animate){
   if(animate&&!prefersReduced){
     t.classList.add('fade');a.classList.add('fade');
     setTimeout(apply,420);
-  }else{
-    apply();
-  }
+  }else{apply();}
 }
 
 function nextQuote(){
   ensureShuffled();
   shuffledIndex++;
-  if(shuffledIndex>=shuffledQuotes.length){
-    /* full cycle complete — reshuffle for a fresh random order */
-    shuffleQuotes();
-  }
+  if(shuffledIndex>=shuffledQuotes.length){shuffleQuotes();}
   renderQuote(true);
 }
 
@@ -2140,11 +2275,19 @@ async function save(){
   });
   const q=await sb.from('workouts').insert(rows);
   if(q.error){toast('Could not save: '+q.error.message)}
-  else{await loadData();renderAll();toast('SESSION SEALED • '+PROGRAM_LABEL[program].toUpperCase()+' POWER RISING');celebrate();screenShake()}
+  else{
+    await loadData();renderAll();
+    toast('SESSION SEALED • '+PROGRAM_LABEL[program].toUpperCase()+' POWER RISING');
+    celebrate();screenShake();
+    kiWave();
+    setTimeout(()=>kiWave({cyan:true,slow:true}),260);
+    setTimeout(()=>kiWave({plasma:true}),520);
+    thunderStrike({intensity:0.9});
+  }
   loading(b,false);
 }
 function exportData(){
-  const b=new Blob([JSON.stringify({version:17,userId:uid(),program,exportedAt:new Date().toISOString(),workouts:programData()},null,2)],{type:'application/json'});
+  const b=new Blob([JSON.stringify({version:18,userId:uid(),program,exportedAt:new Date().toISOString(),workouts:programData()},null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`fit15-${program}-backup.json`;a.click();toast('BACKUP EXPORTED');
 }
 function importData(){toast('Cloud import is disabled for safety.')}
@@ -2175,7 +2318,7 @@ const AUTH_SHELL=(title,sub,body)=>`
       <span class="auth-corner bl"></span>
       <span class="auth-corner br"></span>
       <div class="auth-scouter">
-        <div class="auth-mark">FIT15<small>Ki Realm // v17</small></div>
+        <div class="auth-mark">FIT15<small>Ki Realm // v18</small></div>
         <div class="auth-live"><i></i> LIVE</div>
       </div>
       <div class="auth-meter">
@@ -2370,7 +2513,7 @@ function animateStat(id,value,suffix){
 }
 
 /* ============================================================
-   LIGHTNING — one strike per 15s
+   LIGHTNING
    ============================================================ */
 const lightningState={canvas:null,ctx:null,bolts:[],flashes:[],running:false};
 
@@ -2419,16 +2562,8 @@ function thunderStrike(opts){
     const by=base[1]+50+Math.random()*130;
     branches.push(makeBoltPoints(base[0],base[1],bx,by,4));
   }
-  lightningState.bolts.push({
-    points,branches,age:0,life:1,
-    color:Math.random()<0.2?'gold':'cyan',
-    width:Math.random()*1.3+1.5
-  });
-  lightningState.flashes.push({
-    age:0,life:1,
-    intensity:opts2.intensity || 0.55+Math.random()*0.3,
-    color:'cyan'
-  });
+  lightningState.bolts.push({points,branches,age:0,life:1,color:Math.random()<0.2?'gold':'cyan',width:Math.random()*1.3+1.5});
+  lightningState.flashes.push({age:0,life:1,intensity:opts2.intensity || 0.55+Math.random()*0.3,color:'cyan'});
   if(lightningState.bolts.length>6)lightningState.bolts.shift();
   if(lightningState.flashes.length>4)lightningState.flashes.shift();
   if(!lightningState.running){lightningState.running=true;requestAnimationFrame(lightningFrame)}
@@ -2488,7 +2623,7 @@ function drawBranches(ctx,branches,width){
 }
 
 /* ============================================================
-   POWER EVENT — every 15s: quote + energy pulse + lightning
+   POWER EVENT — quote + pulse + lightning + ki wave
    ============================================================ */
 function powerEvent(){
   nextQuote();
@@ -2499,6 +2634,7 @@ function powerEvent(){
     pulse.classList.add('fire');
   }
   thunderStrike({intensity:0.7});
+  kiWave({slow:true});
   const qb=document.getElementById('quoteBox');
   if(qb){
     qb.classList.add('pulse');
@@ -2507,7 +2643,7 @@ function powerEvent(){
 }
 
 /* ============================================================
-   WORLD CANVAS — flames + embers (light)
+   WORLD CANVAS
    ============================================================ */
 function initWorld(){
   const c=document.getElementById('worldCanvas');
@@ -2642,7 +2778,6 @@ function celebrate(){
   f.classList.remove('burst');void f.offsetWidth;f.classList.add('burst');
 }
 
-/* Chart tab switcher — uses .chart-tab class */
 document.querySelectorAll('.chart-tab').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.chart-tab').forEach(x=>{
     x.classList.remove('active');
@@ -2668,6 +2803,7 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
     showAuth();
     initLightning();
     initWorld();
+    initMatrixRain();
     initHistoryEvents();
     attachRipple();
     if(!prefersReduced)setInterval(powerEvent,15000);
@@ -2681,6 +2817,7 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
   renderAll();
   initLightning();
   initWorld();
+  initMatrixRain();
   initHistoryEvents();
   attachRipple();
   if(!prefersReduced)setInterval(powerEvent,15000);
