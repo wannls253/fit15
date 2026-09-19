@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050508">
 <title>FIT15 — Ki Realm</title>
+
+<!-- 👑 YOUR WEBSITE ICON (FAVICON) -->
+<!-- Replace 'icon.png' with the actual path to your uploaded icon image -->
+<link rel="icon" type="image/png" href="icon.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&family=Noto+Serif+JP:wght@700;900&family=Shippori+Mincho:wght@700;800;900&family=Yuji+Syuku&display=swap" rel="stylesheet">
@@ -201,10 +206,25 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   background:linear-gradient(90deg,transparent,var(--vermillion) 10%,var(--gold) 40%,rgba(255,255,255,.09) 60%,var(--cyan) 90%,transparent);
   opacity:.85;
 }
+
+/* 👑 BRAND LOGO & ICON STYLES */
 .brand{
   font:400 42px/1 var(--font-display);letter-spacing:4px;
-  display:flex;align-items:center;gap:12px;position:relative;color:var(--text);
+  display:flex;align-items:center;gap:14px;position:relative;color:var(--text);
   text-shadow:0 4px 30px rgba(255,37,0,.35);
+}
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 0 24px rgba(255, 170, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 216, 102, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.brand-logo:hover {
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 0 0 40px rgba(255, 170, 0, 0.9), inset 0 1px 0 rgba(255,255,255,0.3);
 }
 .brand span{
   background:var(--flame);-webkit-background-clip:text;background-clip:text;
@@ -1250,6 +1270,7 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
   .history-body-inner{padding:0 14px 12px}
   .history-table th{padding:8px 6px;font-size:7px}
   .history-table td{padding:8px 6px;font-size:11px}
+  .brand-logo{width:38px;height:38px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{
@@ -1280,7 +1301,12 @@ body.shake .app{animation:shakeScreen .42s cubic-bezier(.36,.07,.19,.97)}
 
 <div id="app" class="app hidden">
   <header class="topbar">
-    <div class="brand">FIT<span>15</span><i class="pulse-dot" aria-hidden="true"></i></div>
+    <!-- 👑 BRAND LOGO WITH ICON -->
+    <div class="brand">
+      <img src="icon.png" alt="FIT15" class="brand-logo">
+      FIT<span>15</span>
+      <i class="pulse-dot" aria-hidden="true"></i>
+    </div>
     <div class="account">
       <span id="userEmail" class="account-email"></span>
       <button class="ghost" onclick="signOut()">Sign out</button>
@@ -1698,9 +1724,9 @@ function initMatrixRain(){
   const ctx=c.getContext('2d');
   const GLYPHS='氣力火炎雷龍神覇極傳悟空金箍斗雲變齊天大聖猴王心夢幻刃影風魂';
   const isMobile=window.innerWidth<700;
-  const FONT=isMobile?9:12;        // smaller glyphs
-  const FPS=30;                    // background render cap
-  const SPEED_MIN=4.2;             // rows / second (slow drift)
+  const FONT=isMobile?9:12;
+  const FPS=30;
+  const SPEED_MIN=4.2;
   const SPEED_MAX=7.6;
 
   let w=0,h=0,cols=0,dpr=1;
@@ -1742,7 +1768,6 @@ function initMatrixRain(){
     const dt=Math.min(acc/1000,0.12);
     acc=0;
 
-    // frame-rate independent trail fade
     ctx.fillStyle='rgba(5,5,8,'+(2.6*dt).toFixed(3)+')';
     ctx.fillRect(0,0,w,h);
 
@@ -2527,7 +2552,7 @@ function animateStat(id,value,suffix){
 }
 
 /* ============================================================
-   LIGHTNING
+   ⚡ LIGHTNING ENGINE — PREMIUM, POWERFUL, BADASS
    ============================================================ */
 const lightningState={canvas:null,ctx:null,bolts:[],flashes:[],running:false};
 
@@ -2549,7 +2574,7 @@ function makeBoltPoints(x1,y1,x2,y2,depth){
   const dx=x2-x1,dy=y2-y1;
   const len=Math.hypot(dx,dy)||1;
   const midx=(x1+x2)/2,midy=(y1+y2)/2;
-  const disp=(Math.random()-0.5)*len*0.3;
+  const disp=(Math.random()-0.5)*len*0.35; // more jagged
   const px=-dy/len*disp,py=dx/len*disp;
   const nx=midx+px,ny=midy+py;
   const a=makeBoltPoints(x1,y1,nx,ny,depth-1);
@@ -2561,26 +2586,66 @@ function thunderStrike(opts){
   if(prefersReduced)return;
   const w=window.innerWidth,h=window.innerHeight;
   const opts2=opts||{};
-  const startX=opts2.x ?? (w*0.2+Math.random()*w*0.6);
-  const startY=-20;
-  const endX=startX+(Math.random()-0.5)*w*0.26;
-  const endY=opts2.y ?? h*(0.4+Math.random()*0.5);
-  const points=makeBoltPoints(startX,startY,endX,endY,6);
-  const branches=[];
-  const branchCount=2+Math.floor(Math.random()*3);
-  for(let i=0;i<branchCount;i++){
-    const idx=Math.floor(points.length*(0.2+Math.random()*0.6));
-    const base=points[idx];
-    if(!base)continue;
-    const bx=base[0]+(Math.random()-0.5)*150;
-    const by=base[1]+50+Math.random()*130;
-    branches.push(makeBoltPoints(base[0],base[1],bx,by,4));
+  
+  const isPremium = opts2.premium === true;
+  
+  // Premium strikes spawn 3 bolts with different colors
+  const boltCount = isPremium ? 3 : 1;
+  
+  for(let b=0; b<boltCount; b++){
+    const startX=opts2.x ?? (w*0.1+Math.random()*w*0.8);
+    const startY=-20;
+    const endX=startX+(Math.random()-0.5)*w*0.4;
+    const endY=opts2.y ?? h*(0.3+Math.random()*0.6);
+    
+    // Premium uses deeper recursion for more detail
+    const points=makeBoltPoints(startX,startY,endX,endY, isPremium ? 8 : 6);
+    const branches=[];
+    const branchCount=isPremium ? 4+Math.floor(Math.random()*4) : 2+Math.floor(Math.random()*3);
+    
+    for(let i=0;i<branchCount;i++){
+      const idx=Math.floor(points.length*(0.15+Math.random()*0.7));
+      const base=points[idx];
+      if(!base)continue;
+      const bx=base[0]+(Math.random()-0.5)*220;
+      const by=base[1]+80+Math.random()*180;
+      branches.push(makeBoltPoints(base[0],base[1],bx,by, isPremium ? 5 : 4));
+    }
+    
+    // Color cycling for premium
+    let boltColor = 'cyan';
+    if(isPremium){
+      const colors = ['gold', 'plasma', 'white'];
+      boltColor = colors[b % colors.length];
+    } else {
+      boltColor = Math.random()<0.3 ? 'gold' : 'cyan';
+    }
+    
+    lightningState.bolts.push({
+      points,
+      branches,
+      age:0,
+      life:1,
+      color: boltColor,
+      width: isPremium ? (Math.random()*2.5+2.5) : (Math.random()*1.3+1.5)
+    });
   }
-  lightningState.bolts.push({points,branches,age:0,life:1,color:Math.random()<0.2?'gold':'cyan',width:Math.random()*1.3+1.5});
-  lightningState.flashes.push({age:0,life:1,intensity:opts2.intensity || 0.55+Math.random()*0.3,color:'cyan'});
-  if(lightningState.bolts.length>6)lightningState.bolts.shift();
-  if(lightningState.flashes.length>4)lightningState.flashes.shift();
-  if(!lightningState.running){lightningState.running=true;requestAnimationFrame(lightningFrame)}
+  
+  // Powerful flash
+  lightningState.flashes.push({
+    age:0,
+    life:1,
+    intensity: isPremium ? 1.0 : (opts2.intensity || 0.6+Math.random()*0.3),
+    color: isPremium ? 'white' : 'cyan'
+  });
+  
+  if(lightningState.bolts.length>12)lightningState.bolts.splice(0, lightningState.bolts.length-12);
+  if(lightningState.flashes.length>6)lightningState.flashes.splice(0, lightningState.flashes.length-6);
+  
+  if(!lightningState.running){
+    lightningState.running=true;
+    requestAnimationFrame(lightningFrame);
+  }
 }
 
 function lightningFrame(){
@@ -2589,49 +2654,91 @@ function lightningFrame(){
   const {ctx,canvas}=st;
   const w=canvas.width,h=canvas.height;
   ctx.clearRect(0,0,w,h);
+  
+  // Render flashes
   for(let i=st.flashes.length-1;i>=0;i--){
     const f=st.flashes[i];
-    f.age+=0.09;f.life=1-f.age;
+    f.age+=0.07;
+    f.life=1-f.age;
     if(f.life<=0){st.flashes.splice(i,1);continue}
-    const flicker=f.life>0.85?1:(f.life>0.55?0.45:f.life*2.2);
-    const alpha=f.life*0.4*flicker*f.intensity;
-    ctx.fillStyle=`rgba(0,204,255,${alpha*0.22})`;
+    const flicker=f.life>0.85?1:(f.life>0.55?0.5:f.life*2.5);
+    const alpha=f.life*0.6*flicker*f.intensity;
+    ctx.fillStyle = f.color === 'white' 
+      ? `rgba(255,255,245,${alpha*0.35})` 
+      : `rgba(0,204,255,${alpha*0.25})`;
     ctx.fillRect(0,0,w,h);
   }
+  
+  // Render bolts
   for(let i=st.bolts.length-1;i>=0;i--){
     const b=st.bolts[i];
-    b.age+=0.11;b.life=1-b.age;
+    b.age+=0.09;
+    b.life=1-b.age;
     if(b.life<=0){st.bolts.splice(i,1);continue}
-    const alpha=b.life*(b.life>0.7?1:0.7);
-    const flicker=0.6+Math.random()*0.4;
+    
+    const alpha=b.life*(b.life>0.7?1:0.65);
+    const flicker=0.7+Math.random()*0.3;
     const a=alpha*flicker;
-    const rgb=b.color==='gold'?'255,170,40':'0,204,255';
-    const coreRgb='240,250,255';
+    
+    // Color palette
+    let rgb, coreRgb;
+    switch(b.color){
+      case 'gold':
+        rgb='255,170,40'; coreRgb='255,245,200'; break;
+      case 'plasma':
+        rgb='208,37,232'; coreRgb='255,220,255'; break;
+      case 'white':
+        rgb='220,240,255'; coreRgb='255,255,255'; break;
+      default:
+        rgb='0,204,255'; coreRgb='240,250,255';
+    }
+    
     ctx.save();
-    ctx.shadowColor=`rgba(${rgb},1)`;ctx.shadowBlur=26;
-    ctx.strokeStyle=`rgba(${rgb},${a*0.5})`;ctx.lineWidth=b.width*3.2;
+    
+    // Outer glow
+    ctx.shadowColor=`rgba(${rgb},1)`;
+    ctx.shadowBlur= b.width*12;
+    ctx.strokeStyle=`rgba(${rgb},${a*0.4})`;
+    ctx.lineWidth=b.width*3.8;
     ctx.lineJoin='round';ctx.lineCap='round';
-    drawBoltPath(ctx,b.points);drawBranches(ctx,b.branches,b.width*1.9);
-    ctx.shadowBlur=14;
-    ctx.strokeStyle=`rgba(${rgb},${a})`;ctx.lineWidth=b.width*1.5;
-    drawBoltPath(ctx,b.points);drawBranches(ctx,b.branches,b.width);
-    ctx.shadowBlur=8;
-    ctx.strokeStyle=`rgba(${coreRgb},${a})`;ctx.lineWidth=b.width*0.55;
-    drawBoltPath(ctx,b.points);drawBranches(ctx,b.branches,b.width*0.4);
+    drawBoltPath(ctx,b.points);
+    drawBranches(ctx,b.branches,b.width*2.2);
+    
+    // Mid glow
+    ctx.shadowBlur= b.width*6;
+    ctx.strokeStyle=`rgba(${rgb},${a*0.8})`;
+    ctx.lineWidth=b.width*1.8;
+    drawBoltPath(ctx,b.points);
+    drawBranches(ctx,b.branches,b.width*1.2);
+    
+    // Core
+    ctx.shadowBlur= b.width*3;
+    ctx.strokeStyle=`rgba(${coreRgb},${a})`;
+    ctx.lineWidth=b.width*0.6;
+    drawBoltPath(ctx,b.points);
+    drawBranches(ctx,b.branches,b.width*0.4);
+    
     ctx.restore();
   }
-  if(st.bolts.length===0&&st.flashes.length===0){st.running=false;return}
+  
+  if(st.bolts.length===0&&st.flashes.length===0){
+    st.running=false;
+    return;
+  }
   requestAnimationFrame(lightningFrame);
 }
+
 function drawBoltPath(ctx,points){
   if(!points||points.length<2)return;
   ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);
   for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]);
   ctx.stroke();
 }
+
 function drawBranches(ctx,branches,width){
   if(!branches)return;
-  const prev=ctx.lineWidth;ctx.lineWidth=width;
+  const prev=ctx.lineWidth;
+  ctx.lineWidth=width;
   for(const br of branches)drawBoltPath(ctx,br);
   ctx.lineWidth=prev;
 }
@@ -2792,6 +2899,25 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
   shuffleQuotes();
   const q=await sb.auth.getSession();
   const boot=document.getElementById('boot');
+  
+  // ⚡ PREMIUM LIGHTNING STRIKE — EVERY 15 SECONDS
+  // Fires a badass, powerful lightning storm to keep the realm alive.
+  function scheduleLightning(){
+    if(prefersReduced) return;
+    setInterval(() => {
+      thunderStrike({ premium: true, intensity: 1.0 });
+      // Extra screen shake for premium impact
+      screenShake();
+      // Flash the screen
+      const f = document.getElementById('flash');
+      if(f) {
+        f.classList.remove('burst');
+        void f.offsetWidth;
+        f.classList.add('burst');
+      }
+    }, 15000);
+  }
+
   if(!q.data.session){
     if(boot)boot.classList.add('hidden');
     showAuth();
@@ -2800,8 +2926,8 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
     initMatrixRain();
     initHistoryEvents();
     attachRipple();
-    // gentle quote rotation — no screen-wide energy rings
-    if(!prefersReduced)setInterval(nextQuote,24000);
+    scheduleLightning();
+    if(!prefersReduced)setInterval(nextQuote, 24000);
     return;
   }
   currentUser=q.data.session.user;
@@ -2815,7 +2941,8 @@ sb.auth.onAuthStateChange(e=>{if(e==='PASSWORD_RECOVERY')reset()});
   initMatrixRain();
   initHistoryEvents();
   attachRipple();
-  if(!prefersReduced)setInterval(nextQuote,24000);
+  scheduleLightning();
+  if(!prefersReduced)setInterval(nextQuote, 24000);
 })();
 </script>
 </body>
